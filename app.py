@@ -5,7 +5,7 @@ import os
 st.set_page_config(page_title="my-marketplace | ศูนย์กลางโซเชียล & อีคอมเมิร์ซทั่วไทย", page_icon="🌐", layout="wide")
 
 # ---------------------------------------------------------
-# 🎨 Custom CSS แต่งหน้าเว็บให้ดูพรีเมียม สไตล์ Social & E-Commerce
+# 🎨 Custom CSS แต่งหน้าเว็บให้ดูพรีเมียม ดึงดูดสายตา
 # ---------------------------------------------------------
 st.markdown("""
     <style>
@@ -15,6 +15,14 @@ st.markdown("""
         border-radius: 12px;
         color: white;
         margin-bottom: 20px;
+    }
+    .timeline-card {
+        background-color: #ffffff;
+        border: 1px solid #e4e6eb;
+        padding: 22px;
+        border-radius: 12px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
     }
     .social-card {
         background-color: #ffffff;
@@ -44,26 +52,26 @@ st.markdown("""
 # ส่วนหัวหลักของเว็บ
 st.markdown("""
     <div class="main-header">
-        <h1>🌐 my-marketplace - ศูนย์กลางเชื่อมโยงโซเชียล & อีคอมเมิร์ซทั่วไทย</h1>
-        <p>เชื่อมต่อบ้านเช่า ซื้อ-ขายอสังหาฯ กับ Facebook, YouTube, TikTok และร้านค้าออนไลน์ชั้นนำ ปลอดภัยด้วยระบบ Escrow</p>
+        <h1>🌐 my-marketplace - ฟีดไทม์ไลน์ & ศูนย์กลางทั่วไทย</h1>
+        <p>แหล่งรวมบ้านเช่า ซื้อ-ขายอสังหาฯ ฟีดชุมชนสุดฮิต และเชื่อมโยงโซเชียลมีเดีย ปลอดภัยด้วยระบบ Escrow</p>
     </div>
 """, unsafe_allow_html=True)
 
-# เมนูหลักของเว็บไซต์
+# เมนูหลักของเว็บไซต์ (วางแท็บไทม์ไลน์ไว้ลำดับต้นๆ เพื่อดึงดูดผู้ใช้)
 tabs = st.tabs([
-    "🏠 ค้นหาบ้านเช่า / บ้านมือสอง (ทั่วไทย)",
-    "🌐 เชื่อมโยงโซเชียล & ร้านค้าออนไลน์",
-    "📰 ฟีดชุมชน (Facebook Style)",
-    "🔴 วิดีโอรีวิว (YouTube Style)",
-    "📱 คลิปสั้นรีวิวบ้าน (TikTok Style)",
-    "🛒 ตลาดสินค้าออนไลน์ (Shopee/Lazada Style)",
-    "🛡️ ชำระเงินผ่านระบบกลาง (Escrow)",
-    "➕ ลงประกาศใหม่ (ระบุพิกัดทั่วไทย)", 
-    "🚗 ธุรกรรม & จัดไฟแนนซ์",
-    "🚘 คำนวณค่างวดผ่อนรถ",
-    "🏦 เช็กวงเงินกู้บ้าน",
-    "💳 ชำระเงินค่าบริการแอดมิน", 
-    "📞 ติดต่อ / ร้องเรียน",
+    "📰 ฟีดไทม์ไลน์ (Timeline ยอดฮิต)",
+    "🏠 ค้นหาบ้านเช่า (ทั่วไทย)",
+    "🌐 โซเชียล & ร้านค้า",
+    "🔴 รีวิว (YouTube)",
+    "📱 คลิปสั้น (TikTok)",
+    "🛒 ตลาดออนไลน์",
+    "🛡️ ระบบ Escrow",
+    "➕ ลงประกาศ", 
+    "🚗 จัดไฟแนนซ์",
+    "🚘 คำนวณค่างวด",
+    "🏦 กู้บ้าน",
+    "💳 ชำระเงิน", 
+    "📞 ติดต่อ",
     "⚙️ แอดมิน"
 ])
 
@@ -75,11 +83,52 @@ provinces_thailand = [
 ]
 
 # =========================================================
-# TAB 0: ค้นหาบ้านเช่า / บ้านมือสอง (ทั่วไทย)
+# TAB 0: ฟีดไทม์ไลน์ (Timeline ยอดฮิต - ดึงดูดผู้ใช้)
 # =========================================================
 with tabs[0]:
+    st.subheader("📰 ฟีดไทม์ไลน์ชุมชนออนไลน์ (Community Timeline)")
+    st.write("พื้นที่แชร์เรื่องราว อัปเดตสถานะ ประกาศหาบ้านเช่า หรือพูดคุยแลกเปลี่ยนข้อมูลกันได้สดๆ ที่นี่ครับ!")
+
+    # กล่องสร้างโพสต์สไตล์ Facebook
+    with st.container():
+        st.markdown('<div class="timeline-card">', unsafe_allow_html=True)
+        st.markdown("##### ✍️ คุณกำลังคิดอะไรอยู่? หรือต้องการหาบ้านเช่าจังหวัดไหน โพสต์บอกเพื่อนๆ ได้เลย")
+        with st.form("timeline_post_active", clear_on_submit=True):
+            t_name = st.text_input("ชื่อของคุณ / จังหวัดของคุณ")
+            t_msg = st.text_area("เขียนข้อความ แชร์เรื่องราว หรือรายละเอียดบ้านที่กำลังมองหา...")
+            if st.form_submit_button("🚀 เผยแพร่โพสต์ลงไทม์ไลน์"):
+                if t_name and t_msg:
+                    st.success("🎉 โพสต์ของคุณถูกแชร์ขึ้นหน้าฟีดไทม์ไลน์เรียบร้อยแล้ว!")
+                else:
+                    st.warning("⚠️ กรุณากรอกชื่อและข้อความก่อนโพสต์ครับ")
+        st.markdown('</div>', unsafe_allow_html=True)
+
+    st.markdown("### 🔥 โพสต์ยอดฮิตในชุมชนตอนนี้")
+
+    # ตัวอย่างโพสต์จำลองในไทม์ไลน์
+    timeline_posts = [
+        {"user": "คุณอรัญ (Fresh Food Manager - ปทุมธานี)", "time": "15 นาทีที่แล้ว", "text": "สวัสดีครับทุกท่าน! ใครกำลังจะย้ายจากต่างจังหวัดเข้ามาทำงานหรือหาบ้านเช่าโซนปทุมธานี ทักมาพูดคุยหรือโพสต์สอบถามในฟีดนี้ได้เลยนะครับ ยินดีต้อนรับครับผม 😊🏡"},
+        {"user": "คุณสมชาย (ตัวแทนอสังหาฯ - กรุงเทพฯ)", "time": "1 ชั่วโมงที่แล้ว", "text": "อัปเดตบ้านเช่าและคอนโดพร้อมอยู่ทั่วกรุงเทพฯ และปริมณฑล ราคาประหยัด สนใจดูรายละเอียดกดที่แท็บค้นหาได้เลยครับ 🏢✨"},
+        {"user": "คุณนภา (เชียงใหม่)", "time": "3 ชั่วโมงที่แล้ว", "text": "เพิ่งใช้บริการหาบ้านเช่าผ่านเว็บนี้ สะดวกมากค่ะ ได้บ้านบรรยากาศดีที่เชียงใหม่แล้ว แนะนำเลยค่ะ 👍"}
+    ]
+
+    for post in timeline_posts:
+        st.markdown(f'''
+            <div class="timeline-card">
+                <strong>👤 {post['user']}</strong> &nbsp;&nbsp; <span style="color:gray; font-size:12px;">{post['time']}</span>
+                <p style="margin-top: 12px; font-size: 16px; line-height: 1.5;">{post['text']}</p>
+                <hr style="margin: 10px 0; border: none; border-top: 1px solid #eaeaea;">
+                <span style="color: #1877f2; cursor: pointer; font-weight: bold;">👍 ถูกใจ</span> &nbsp;&nbsp;&nbsp;&nbsp; 
+                <span style="color: #65676b; cursor: pointer; font-weight: bold;">💬 แสดงความคิดเห็น</span> &nbsp;&nbsp;&nbsp;&nbsp; 
+                <span style="color: #65676b; cursor: pointer; font-weight: bold;">↗️ แชร์</span>
+            </div>
+        ''', unsafe_allow_html=True)
+
+# =========================================================
+# TAB 1: ค้นหาบ้านเช่า (ทั่วไทย)
+# =========================================================
+with tabs[1]:
     st.subheader("📍 ระบบค้นหาอสังหาฯ และบ้านเช่าแม่นยำทั่วประเทศไทย")
-    
     with st.container():
         st.markdown('<div class="highlight-box">', unsafe_allow_html=True)
         col_loc1, col_loc2, col_loc3 = st.columns(3)
@@ -90,8 +139,6 @@ with tabs[0]:
         with col_loc3:
             price_range = st.selectbox("💰 ช่วงราคา / ค่าเช่า", ["ทั้งหมด", "ต่ำกว่า 5,000 บาท/เดือน", "5,000 - 10,000 บาท/เดือน", "10,000 - 20,000 บาท/เดือน", "20,000 บาทขึ้นไป"])
         st.markdown('</div>', unsafe_allow_html=True)
-
-    st.subheader(f"📌 ผลการค้นหาในพื้นที่: {selected_province}")
 
     all_listings = [
         {"title": "🏠 ทาวน์โฮมให้เช่า ทำเลใกล้แหล่งงาน", "province": "ปทุมธานี", "price": "6,500 บาท/เดือน", "type": "บ้านเช่า / หอพัก", "desc": "พร้อมเข้าอยู่ เดินทางสะดวก ปลอดภัย", "seller": "คุณอรัญ"},
@@ -111,56 +158,20 @@ with tabs[0]:
             st.divider()
 
 # =========================================================
-# TAB 1: เชื่อมโยงโซเชียล & ร้านค้าออนไลน์
-# =========================================================
-with tabs[1]:
-    st.subheader("🌐 ศูนย์รวมลิงก์เชื่อมโยง (Social & E-Commerce Integration)")
-    st.write("เข้าถึงช่องทางทางการของเราบนแพลตฟอร์มภายนอกได้อย่างรวดเร็ว")
-
-    col_s1, col_s2, col_s3, col_s4 = st.columns(4)
-    with col_s1:
-        st.markdown('<div class="social-card">', unsafe_allow_html=True)
-        st.markdown("### 📘 Facebook")
-        st.write("ติดตามเพจหลัก แชร์ประกาศ และพูดคุยในกลุ่มชุมชน")
-        st.markdown("[🔗 ไปที่ Facebook Page](https://www.facebook.com)", unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
-    with col_s2:
-        st.markdown('<div class="social-card">', unsafe_allow_html=True)
-        st.markdown("### 🔴 YouTube")
-        st.write("รับชมวิดีโอรีวิวบ้านเช่า ทัวร์โครงการ และไลฟ์สตรีม")
-        st.markdown("[🔗 ไปที่ YouTube Channel](https://www.youtube.com)", unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
-    with col_s3:
-        st.markdown('<div class="social-card">', unsafe_allow_html=True)
-        st.markdown("### 📱 TikTok")
-        st.write("รับชมคลิปสั้นรีวิวห้องพัก บรรยากาศจริงแบบรวดเร็วทันใจ")
-        st.markdown("[🔗 ไปที่ TikTok Profile](https://www.tiktok.com)", unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
-    with col_s4:
-        st.markdown('<div class="social-card">', unsafe_allow_html=True)
-        st.markdown("### 🛍️ Shopee / Lazada")
-        st.write("เลือกซื้อสินค้าตกแต่งบ้าน อุปกรณ์ไอที และของใช้จำเป็น")
-        st.markdown("[🔗 ไปที่ Shopee Store](https://shopee.co.th)", unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
-
-# =========================================================
-# TAB 2: ฟีดชุมชน (Facebook Style)
+# TAB 2 - 13: ฟังก์ชันอื่นๆ ครบถ้วน
 # =========================================================
 with tabs[2]:
-    st.subheader("📰 ฟีดข่าวสาร & ชุมชนออนไลน์ (Facebook Style)")
-    with st.container():
-        st.markdown('<div class="social-card">', unsafe_allow_html=True)
-        with st.form("fb_post_form", clear_on_submit=True):
-            st.text_input("ชื่อของคุณ / จังหวัด")
-            st.text_area("แชร์เรื่องราวหรือประกาศหาบ้าน...")
-            if st.form_submit_button("📤 โพสต์ลงฟีด"):
-                st.success("🎉 โพสต์เรียบร้อยแล้ว!")
-        st.markdown('</div>', unsafe_allow_html=True)
-    st.markdown('<div class="social-card"><strong>👤 คุณอรัญ (ปทุมธานี):</strong><p>ยินดีต้อนรับทุกท่านสู่แพลตฟอร์มเชื่อมโยงทั่วไทยครับ 😊</p></div>', unsafe_allow_html=True)
+    st.subheader("🌐 ศูนย์รวมลิงก์เชื่อมโยง (Social & E-Commerce)")
+    col_s1, col_s2, col_s3, col_s4 = st.columns(4)
+    with col_s1:
+        st.markdown('<div class="social-card"><h3>📘 Facebook</h3><p>ติดตามเพจหลักชุมชน</p><a href="https://www.facebook.com" target="_blank">🔗 ไปที่ Facebook</a></div>', unsafe_allow_html=True)
+    with col_s2:
+        st.markdown('<div class="social-card"><h3>🔴 YouTube</h3><p>รับชมวิดีโอรีวิวบ้าน</p><a href="https://www.youtube.com" target="_blank">🔗 ไปที่ YouTube</a></div>', unsafe_allow_html=True)
+    with col_s3:
+        st.markdown('<div class="social-card"><h3>📱 TikTok</h3><p>รับชมคลิปสั้นรีวิวห้องพัก</p><a href="https://www.tiktok.com" target="_blank">🔗 ไปที่ TikTok</a></div>', unsafe_allow_html=True)
+    with col_s4:
+        st.markdown('<div class="social-card"><h3>🛍️ Shopee / Lazada</h3><p>เลือกซื้อของแต่งบ้าน</p><a href="https://shopee.co.th" target="_blank">🔗 ไปที่ Shopee</a></div>', unsafe_allow_html=True)
 
-# =========================================================
-# TAB 3: วิดีโอรีวิว (YouTube Style)
-# =========================================================
 with tabs[3]:
     st.subheader("🔴 วิดีโอรีวิวบ้านเช่า & โครงการ (YouTube Style)")
     col_v1, col_v2 = st.columns(2)
@@ -169,9 +180,6 @@ with tabs[3]:
     with col_v2:
         st.video("https://www.youtube.com/watch?v=dQw4w9WgXcQ")
 
-# =========================================================
-# TAB 4: คลิปสั้นรีวิวบ้าน (TikTok Style)
-# =========================================================
 with tabs[4]:
     st.subheader("📱 คลิปสั้นรีวิวบ้านด่วน (TikTok Style Reels)")
     col_t1, col_t2, col_t3 = st.columns(3)
@@ -182,37 +190,17 @@ with tabs[4]:
     with col_t3:
         st.info("🏡 **Reel #3:** บ้านเดี่ยวเชียงใหม่")
 
-# =========================================================
-# TAB 5: ตลาดสินค้าออนไลน์ (Shopee/Lazada Style)
-# =========================================================
 with tabs[5]:
     st.subheader("🛒 ตลาดสินค้าตกแต่งบ้าน & ของใช้ (Shopee / Lazada Style)")
-    st.write("เลือกซื้ออุปกรณ์เสริมสำหรับบ้านใหม่ เฟอร์นิเจอร์ และเครื่องใช้ไฟฟ้าส่งตรงถึงบ้าน")
-    
     col_p1, col_p2, col_p3 = st.columns(3)
     with col_p1:
-        st.markdown('<div class="shopping-card">', unsafe_allow_html=True)
-        st.markdown("#### 🛏️ ชุดเครื่องนอนครบชุดเกรดพรีเมียม")
-        st.markdown("**ราคา:** 590 บาท ⭐ 4.8 (1.2K ขายแล้ว)")
-        st.markdown("[🛒 สั่งซื้อผ่าน Shopee/Lazada](https://shopee.co.th)", unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
+        st.markdown('<div class="shopping-card"><h4>🛏️ ชุดเครื่องนอน</h4><p>590 บาท</p><a href="https://shopee.co.th" target="_blank">🛒 สั่งซื้อ</a></div>', unsafe_allow_html=True)
     with col_p2:
-        st.markdown('<div class="shopping-card">', unsafe_allow_html=True)
-        st.markdown("#### 🪑 โต๊ะทำงานพับได้มินิมอล")
-        st.markdown("**ราคา:** 450 บาท ⭐ 4.9 (3.5K ขายแล้ว)")
-        st.markdown("[🛒 สั่งซื้อผ่าน Shopee/Lazada](https://shopee.co.th)", unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
+        st.markdown('<div class="shopping-card"><h4>🪑 โต๊ะทำงาน</h4><p>450 บาท</p><a href="https://shopee.co.th" target="_blank">🛒 สั่งซื้อ</a></div>', unsafe_allow_html=True)
     with col_p3:
-        st.markdown('<div class="shopping-card">', unsafe_allow_html=True)
-        st.markdown("#### 💡 หลอดไฟอัจฉริยะควบคุมผ่านมือถือ")
-        st.markdown("**ราคา:** 199 บาท ⭐ 4.7 (890 ขายแล้ว)")
-        st.markdown("[🛒 สั่งซื้อผ่าน Shopee/Lazada](https://shopee.co.th)", unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
+        st.markdown('<div class="shopping-card"><h4>💡 หลอดไฟอัจฉริยะ</h4><p>199 บาท</p><a href="https://shopee.co.th" target="_blank">🛒 สั่งซื้อ</a></div>', unsafe_allow_html=True)
 
-# =========================================================
-# TAB อื่นๆ คงระบบเดิมครบถ้วน
-# =========================================================
 with tabs[6]:
     st.subheader("🛡️ ระบบชำระเงินปลอดภัยผ่านคนกลาง (Escrow)")
 with tabs[7]:
-    st.subheade
+    st.subheader("➕ ล
