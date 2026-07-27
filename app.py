@@ -1,13 +1,11 @@
 import streamlit as st
-import time
+import os
 
-# ตั้งค่าหน้าตาของเว็บ
 st.set_page_config(page_title="ศูนย์กลางลงประกาศบ้าน & สินค้ามือสอง", page_icon="🏠", layout="wide")
 
 st.title("🏠 ศูนย์กลางลงประกาศซื้อ-ขาย/เช่า บ้านและสินค้ามือสอง")
 st.write("ลงประกาศง่ายๆ พร้อมระบบชำระเงินอัปเกรดประกาศพรีเมียม")
 
-# แบ่งแท็บการทำงาน
 tab1, tab2, tab3 = st.tabs(["📌 รายการประกาศทั้งหมด", "➕ ลงประกาศใหม่", "💎 ชำระเงิน / อัปเกรดพรีเมียม"])
 
 with tab1:
@@ -29,7 +27,7 @@ with tab2:
             st.success("🎉 บันทึกข้อมูลประกาศเรียบร้อยแล้ว!")
 
 with tab3:
-    st.subheader("💳 ชำระเงินอัปเกรดประกาศพรีเมียม (รับเงินอัตโนมัติ)")
+    st.subheader("💳 ชำระเงินอัปเกรดประกาศพรีเมียม (โอนตรงเข้าบัญชี)")
     st.write("เพิ่มโอกาสการมองเห็นประกาศของคุณให้อยู่ในตำแหน่งหน้าแรก!")
     
     col1, col2 = st.columns([1, 1])
@@ -40,7 +38,6 @@ with tab3:
             ["ติดป้ายพรีเมียม 7 วัน (50 บาท)", "ติดป้ายพรีเมียม 30 วัน (150 บาท)", "แพ็กเกจเหมาจ่ายรายเดือน (299 บาท)"]
         )
         
-        # คำนวณราคา
         if "50" in package:
             amount = 50
         elif "150" in package:
@@ -48,25 +45,21 @@ with tab3:
         else:
             amount = 299
             
-        btn_pay = st.button("สร้าง QR Code ชำระเงิน", type="primary")
+        st.info(f"💰 ยอดชำระทั้งสิ้น: **{amount} บาท**")
 
     with col2:
-        if btn_pay:
-            st.markdown(f"### **ยอดชำระทั้งสิ้น: {amount} บาท**")
-            # สร้าง QR Code ตัวอย่างสำหรับการสแกนจ่าย
-            qr_url = f"https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=PromptPay-Payment-Amount-{amount}"
-            st.image(qr_url, caption="สแกน QR Code ด้วยแอปธนาคารเพื่อชำระเงิน")
-            
-            st.warning("⏳ ระบบกำลังรอสัญญาณชำระเงินอัตโนมัติ...")
-            
-            # จำลองระบบตรวจเช็กการโอนเงิน (Real-time check)
-            progress_bar = st.progress(0)
-            for i in range(100):
-                time.sleep(0.03)
-                progress_bar.progress(i + 1)
-                
-            st.success("✅ ระบบได้รับยอดชำระเงินเรียบร้อยแล้ว! ประกาศของคุณได้รับการปรับเป็นพรีเมียมทันที")
-            st.balloons()
+        st.markdown("### **สแกนชำระเงินผ่าน PromptPay**")
+        
+        # เช็กชื่อไฟล์รูปภาพ QR Code ทั้ง .jpg และ .png
+        if os.path.exists("qr_code.jpg"):
+            st.image("qr_code.jpg", caption="สแกน QR Code เพื่อโอนเงินเข้าบัญชี นาย อรัญ ไชยทิพย์ โดยตรง", width=280)
+        elif os.path.exists("qr_code.png"):
+            st.image("qr_code.png", caption="สแกน QR Code เพื่อโอนเงินเข้าบัญชี นาย อรัญ ไชยทิพย์ โดยตรง", width=280)
+        elif os.path.exists("qr_code.jpeg"):
+            st.image("qr_code.jpeg", caption="สแกน QR Code เพื่อโอนเงินเข้าบัญชี นาย อรัญ ไชยทิพย์ โดยตรง", width=280)
+        else:
+            st.warning("⚠️ กรุณาอัปโหลดไฟล์รูป 'qr_code' ขึ้น GitHub เพื่อแสดง QR Code พร้อมเพย์ของคุณ")
 
     st.divider()
-    st.caption("สอบถามเพิ่มเติมหรือติดต่อนายหน้า: LINE Official / โทรศัพท์ 08X-XXX-XXXX")
+    st.subheader("📲 แจ้งการชำระเงิน / ส่งสลิป")
+    st.write("เมื่อโอนเงินเรียบร้อยแล้ว กรุณาส่งสลิปยืนยันมาที่ LINE หรือโทรแจ้งได้เลยครับ")
