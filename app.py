@@ -3,9 +3,6 @@ import os
 
 st.set_page_config(page_title="my-marketplace | ศูนย์กลางโซเชียล & อีคอมเมิร์ซทั่วไทย", page_icon="🌐", layout="wide")
 
-# ---------------------------------------------------------
-# 🎨 Custom CSS แต่งหน้าเว็บให้พรีเมียมทันสมัย
-# ---------------------------------------------------------
 st.markdown("""
     <style>
     .main-header {
@@ -48,7 +45,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ---------------------------------------------------------
-# 🗄️ Database จำลองใน Session State (เพื่อให้ทุกฟังก์ชันทำงานจริง)
+# Session State สำหรับเก็บข้อมูล
 # ---------------------------------------------------------
 if "timeline_posts" not in st.session_state:
     st.session_state.timeline_posts = [
@@ -69,8 +66,8 @@ if "finance_requests" not in st.session_state:
 if "contacts" not in st.session_state:
     st.session_state.contacts = []
 
-# เมนูหลักของเว็บไซต์
-tabs = st.tabs([
+# สร้าง Tabs หลัก
+tab0, tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9, tab10, tab11, tab12, tab13 = st.tabs([
     "📰 ฟีดไทม์ไลน์",
     "🏠 ค้นหาบ้านเช่า",
     "🌐 โซเชียล",
@@ -94,130 +91,115 @@ provinces_thailand = [
     "ชลบุรี", "ระยอง", "ภูเก็ต", "สงขลา", "สุราษฎร์ธานี", "พระนครศรีอยุธยา"
 ]
 
-# =========================================================
-# TAB 0: ฟีดไทม์ไลน์ (ใช้งานจริง โพสต์แล้วขึ้นทันที)
-# =========================================================
-with tabs[0]:
+with tab0:
     st.subheader("📰 ฟีดไทม์ไลน์ชุมชนออนไลน์ (Community Timeline)")
-    st.write("พื้นที่แชร์เรื่องราว อัปเดตสถานะ ประกาศหาบ้านเช่า หรือพูดคุยแลกเปลี่ยนข้อมูลกันได้ทันที!")
+    with st.form("form_t0", clear_on_submit=True):
+        p_user = st.text_input("ชื่อของคุณ / จังหวัด")
+        p_text = st.text_area("คุณกำลังคิดอะไรอยู่ หรือต้องการหาบ้านเช่าที่ไหน?")
+        if st.form_submit_button("🚀 โพสต์ลงไทม์ไลน์ทันที"):
+            if p_user and p_text:
+                st.session_state.timeline_posts.insert(0, {"user": p_user, "time": "เมื่อสักครู่นี้", "text": p_text})
+                st.success("🎉 โพสต์สำเร็จ!")
+            else:
+                st.warning("⚠️ กรุณากรอกข้อมูลให้ครบ")
 
-    with st.container():
-        st.markdown('<div class="timeline-card">', unsafe_allow_html=True)
-        st.markdown("##### ✍️ สร้างโพสต์ใหม่ของคุณ")
-        with st.form("timeline_form_real", clear_on_submit=True):
-            p_user = st.text_input("ชื่อของคุณ / จังหวัด")
-            p_text = st.text_area("คุณกำลังคิดอะไรอยู่ หรือต้องการหาบ้านเช่าที่ไหน?")
-            if st.form_submit_button("🚀 โพสต์ลงไทม์ไลน์ทันที"):
-                if p_user and p_text:
-                    new_post = {"user": p_user, "time": "เมื่อสักครู่นี้", "text": p_text}
-                    st.session_state.timeline_posts.insert(0, new_post)
-                    st.success("🎉 โพสต์ของคุณถูกเผยแพร่ลงหน้าฟีดเรียบร้อยแล้ว!")
-                else:
-                    st.warning("⚠️ กรุณากรอกชื่อและข้อความก่อนกดโพสต์ครับ")
-        st.markdown('</div>', unsafe_allow_html=True)
-
-    st.markdown("### 🔥 ฟีดโพสต์ล่าสุดจากสมาชิก")
+    st.markdown("### 🔥 ฟีดโพสต์ล่าสุด")
     for post in st.session_state.timeline_posts:
-        st.markdown(f'''
-            <div class="timeline-card">
-                <strong>👤 {post['user']}</strong> &nbsp;&nbsp; <span style="color:gray; font-size:12px;">{post['time']}</span>
-                <p style="margin-top: 10px; font-size: 15px; line-height: 1.5;">{post['text']}</p>
-            </div>
-        ''', unsafe_allow_html=True)
+        st.markdown(f'<div class="timeline-card"><strong>👤 {post["user"]}</strong> <span style="color:gray; font-size:12px;">{post["time"]}</span><p style="margin-top:10px;">{post["text"]}</p></div>', unsafe_allow_html=True)
 
-# =========================================================
-# TAB 1: ค้นหาบ้านเช่า
-# =========================================================
-with tabs[1]:
-    st.subheader("📍 ระบบค้นหาอสังหาฯ และบ้านเช่าแม่นยำทั่วประเทศไทย")
-    with st.container():
-        st.markdown('<div class="highlight-box">', unsafe_allow_html=True)
-        col_l1, col_l2, col_l3 = st.columns(3)
-        with col_l1:
-            sel_prov = st.selectbox("📍 เลือกจังหวัด", provinces_thailand)
-        with col_l2:
-            sel_type = st.selectbox("🏠 ประเภท", ["ทั้งหมด", "บ้านเช่า / หอพัก", "บ้านเดี่ยว / ทาวน์โฮม", "คอนโดมิเนียม", "ที่ดิน"])
-        with col_l3:
-            sel_price = st.selectbox("💰 ช่วงราคา / ค่าเช่า", ["ทั้งหมด", "ต่ำกว่า 10,000 บาท", "10,000 - 20,000 บาท", "20,000 บาทขึ้นไป"])
-        st.markdown('</div>', unsafe_allow_html=True)
-
-    filtered_list = []
+with tab1:
+    st.subheader("📍 ระบบค้นหาอสังหาฯ และบ้านเช่าทั่วไทย")
+    sel_prov = st.selectbox("📍 เลือกจังหวัด", provinces_thailand, key="s_prov")
+    sel_type = st.selectbox("🏠 ประเภท", ["ทั้งหมด", "บ้านเช่า / หอพัก", "บ้านเดี่ยว / ทาวน์โฮม", "คอนโดมิเนียม", "ที่ดิน"], key="s_type")
+    
     for item in st.session_state.listings:
-        match = True
-        if sel_prov != "--- ทุกจังหวัดทั่วไทย ---" and item["province"] != sel_prov:
-            match = False
-        if sel_type != "ทั้งหมด" and item["type"] != sel_type:
-            match = False
-        if sel_price == "ต่ำกว่า 10,000 บาท" and item["price"] >= 10000:
-            match = False
-        elif sel_price == "10,000 - 20,000 บาท" and not (10000 <= item["price"] <= 20000):
-            match = False
-        elif sel_price == "20,000 บาทขึ้นไป" and item["price"] <= 20000:
-            match = False
-        if match:
-            filtered_list.append(item)
+        if (sel_prov == "--- ทุกจังหวัดทั่วไทย ---" or item["province"] == sel_prov) and (sel_type == "ทั้งหมด" or item["type"] == sel_type):
+            st.markdown(f'<div class="listing-card"><h3>{item["title"]}</h3><p><strong>ราคา:</strong> {item["price"]:,} บาท/เดือน | <strong>ประเภท:</strong> {item["type"]}</p><p>{item["desc"]}</p><p style="color:gray; font-size:13px;">📍 จังหวัด: {item["province"]} | ผู้ติดต่อ: {item["seller"]}</p></div>', unsafe_allow_html=True)
 
-    st.subheader(f"📌 ผลการค้นหาพบทั้งหมด {len(filtered_list)} รายการ")
-    for item in filtered_list:
-        st.markdown(f'''
-            <div class="listing-card">
-                <h3>{item['title']}</h3>
-                <p><strong>ค่าเช่า/ราคา:</strong> {item['price']:,} บาท/เดือน | <strong>ประเภท:</strong> {item['type']}</p>
-                <p>{item['desc']}</p>
-                <p style="color: gray; font-size: 13px;">📍 จังหวัด: {item['province']} | ผู้ลงประกาศ: {item['seller']}</p>
-            </div>
-        ''', unsafe_allow_html=True)
-
-# =========================================================
-# TAB 2: โซเชียล
-# =========================================================
-with tabs[2]:
+with tab2:
     st.subheader("🌐 ศูนย์รวมลิงก์เชื่อมโยงโซเชียลมีเดีย")
-    col_s1, col_s2, col_s3, col_s4 = st.columns(4)
-    with col_s1:
-        st.markdown('<div class="social-card"><h3>📘 Facebook</h3><a href="https://www.facebook.com" target="_blank">🔗 ไปที่ Facebook</a></div>', unsafe_allow_html=True)
-    with col_s2:
-        st.markdown('<div class="social-card"><h3>🔴 YouTube</h3><a href="https://www.youtube.com" target="_blank">🔗 ไปที่ YouTube</a></div>', unsafe_allow_html=True)
-    with col_s3:
-        st.markdown('<div class="social-card"><h3>📱 TikTok</h3><a href="https://www.tiktok.com" target="_blank">🔗 ไปที่ TikTok</a></div>', unsafe_allow_html=True)
-    with col_s4:
-        st.markdown('<div class="social-card"><h3>🛍️ Shopee / Lazada</h3><a href="https://shopee.co.th" target="_blank">🔗 ไปที่ Shopee</a></div>', unsafe_allow_html=True)
+    c1, c2, c3, c4 = st.columns(4)
+    with c1: st.markdown('<div class="social-card"><h3>📘 Facebook</h3><a href="https://www.facebook.com" target="_blank">🔗 ไปที่ Facebook</a></div>', unsafe_allow_html=True)
+    with c2: st.markdown('<div class="social-card"><h3>🔴 YouTube</h3><a href="https://www.youtube.com" target="_blank">🔗 ไปที่ YouTube</a></div>', unsafe_allow_html=True)
+    with c3: st.markdown('<div class="social-card"><h3>📱 TikTok</h3><a href="https://www.tiktok.com" target="_blank">🔗 ไปที่ TikTok</a></div>', unsafe_allow_html=True)
+    with c4: st.markdown('<div class="social-card"><h3>🛍️ Shopee / Lazada</h3><a href="https://shopee.co.th" target="_blank">🔗 ไปที่ Shopee</a></div>', unsafe_allow_html=True)
 
-# =========================================================
-# TAB 3: รีวิว YouTube
-# =========================================================
-with tabs[3]:
+with tab3:
     st.subheader("🔴 วิดีโอรีวิวบ้านเช่า & โครงการ (YouTube Style)")
-    c1, c2 = st.columns(2)
-    with c1:
-        st.video("https://www.youtube.com/watch?v=dQw4w9WgXcQ")
-    with c2:
-        st.video("https://www.youtube.com/watch?v=dQw4w9WgXcQ")
+    st.video("https://www.youtube.com/watch?v=dQw4w9WgXcQ")
 
-# =========================================================
-# TAB 4: คลิปสั้น TikTok
-# =========================================================
-with tabs[4]:
+with tab4:
     st.subheader("📱 คลิปสั้นรีวิวบ้านด่วน (TikTok Style Reels)")
-    t1, t2, t3 = st.columns(3)
-    with t1:
-        st.info("🔥 **Reel #1:** คอนโดแต่งครบ 4,500 บ.")
-    with t2:
-        st.info("✨ **Reel #2:** ทาวน์โฮมรีโนเวทใหม่")
-    with t3:
-        st.info("🏡 **Reel #3:** บ้านเดี่ยวเชียงใหม่")
+    st.info("🔥 **Reel #1:** คอนโดแต่งครบ 4,500 บ./เดือน")
 
-# =========================================================
-# TAB 5: ตลาดออนไลน์
-# =========================================================
-with tabs[5]:
+with tab5:
     st.subheader("🛒 ตลาดสินค้าตกแต่งบ้าน (Shopee / Lazada Style)")
-    p1, p2, p3 = st.columns(3)
-    with p1:
-        st.markdown('<div class="social-card"><h4>🛏️ ชุดเครื่องนอน</h4><p>590 บาท</p><a href="https://shopee.co.th" target="_blank">🛒 สั่งซื้อ</a></div>', unsafe_allow_html=True)
-    with p2:
-        st.markdown('<div class="social-card"><h4>🪑 โต๊ะทำงาน</h4><p>450 บาท</p><a href="https://shopee.co.th" target="_blank">🛒 สั่งซื้อ</a></div>', unsafe_allow_html=True)
-    with p3:
-        st.markdown('<div class="social-card"><h4>💡 หลอดไฟอัจฉริยะ</h4><p>199 บาท</p><a href="https://shopee.co.th" target="_blank">🛒 สั่งซื้อ</a></div>', unsafe_allow_html=True)
+    st.markdown('<div class="social-card"><h4>🛏️ ชุดเครื่องนอน</h4><p>590 บาท</p><a href="https://shopee.co.th" target="_blank">🛒 สั่งซื้อ</a></div>', unsafe_allow_html=True)
 
-# =====================
+with tab6:
+    st.subheader("🛡️ ระบบชำระเงินปลอดภัยผ่านคนกลาง (Escrow)")
+    st.write("ระบบพักเงินปลอดภัย 100% สำหรับผู้ซื้อและผู้เช่าที่อยู่ต่างจังหวัด")
+
+with tab7:
+    st.subheader("➕ ลงประกาศใหม่")
+    with st.form("form_t7", clear_on_submit=True):
+        l_title = st.text_input("หัวข้อประกาศ")
+        l_prov = st.selectbox("จังหวัด", provinces_thailand[1:], key="l_p")
+        l_type = st.selectbox("ประเภท", ["บ้านเช่า / หอพัก", "บ้านเดี่ยว / ทาวน์โฮม", "คอนโดมิเนียม", "ที่ดิน"], key="l_t")
+        l_price = st.number_input("ราคาต่อเดือน (บาท)", min_value=0, step=500)
+        l_desc = st.text_area("รายละเอียด")
+        l_seller = st.text_input("ชื่อผู้ติดต่อ / เบอร์โทร")
+        if st.form_submit_button("💾 บันทึกประกาศ"):
+            if l_title and l_price > 0 and l_seller:
+                st.session_state.listings.insert(0, {"title": l_title, "province": l_prov, "price": l_price, "type": l_type, "desc": l_desc, "seller": l_seller})
+                st.success("🎉 บันทึกประกาศสำเร็จ!")
+            else:
+                st.warning("⚠️ กรุณากรอกข้อมูลให้ครบ")
+
+with tab8:
+    st.subheader("🚗 บริการจัดไฟแนนซ์รถยนต์ & รีไฟแนนซ์")
+    with st.form("form_t8", clear_on_submit=True):
+        f_name = st.text_input("ชื่อ-นามสกุล")
+        f_tel = st.text_input("เบอร์โทรศัพท์")
+        f_car = st.text_input("รุ่นรถยนต์ / ปี")
+        f_amt = st.number_input("วงเงินกู้ (บาท)", min_value=10000, step=10000)
+        if st.form_submit_button("📩 ส่งเรื่องขอสินเชื่อ"):
+            if f_name and f_tel:
+                st.session_state.finance_requests.append({"name": f_name, "tel": f_tel, "car": f_car, "amount": f_amt})
+                st.success("🎉 ส่งข้อมูลขอสินเชื่อสำเร็จ!")
+            else:
+                st.warning("⚠️ กรุณากรอกชื่อและเบอร์โทร")
+
+with tab9:
+    st.subheader("🚘 เครื่องมือคำนวณค่างวดผ่อนชำระรถยนต์")
+    c_price = st.number_input("ราคารถ (บาท)", min_value=50000, value=350000, step=10000)
+    c_down = st.number_input("เงินดาวน์ (บาท)", min_value=0, value=30000, step=5000)
+    c_rate = st.slider("ดอกเบี้ยต่อปี (%)", min_value=2.0, max_value=15.0, value=4.5, step=0.25)
+    c_term = st.selectbox("งวด (เดือน)", [24, 36, 48, 60, 72, 84])
+    
+    net_loan = max(0, c_price - c_down)
+    m_pay = (net_loan + (net_loan * (c_rate / 100) * (c_term / 12))) / c_term
+    st.metric(label="ยอดจัดไฟแนนซ์สุทธิ", value=f"{net_loan:,.0f} บาท")
+    st.metric(label="ค่างวดผ่อนประมาณ / เดือน (รวม VAT 7%)", value=f"{m_pay * 1.07:,.0f} บาท")
+
+with tab10:
+    st.subheader("🏦 เครื่องมือคำนวณวงเงินกู้ซื้อบ้าน")
+    sal = st.number_input("รายได้สุทธิต่อเดือน (บาท)", min_value=10000, value=30000, step=1000)
+    deb = st.number_input("ภาระหนี้เดิมต่อเดือน (บาท)", min_value=0, value=0, step=500)
+    net_inc = max(0, sal - deb)
+    st.metric(label="ค่างวดผ่อนบ้านสูงสุด / เดือน", value=f"{net_inc * 0.40:,.0f} บาท")
+    st.metric(label="ประมาณการวงเงินกู้ซื้อบ้านสูงสุด", value=f"{((net_inc * 0.40) / 7000) * 1000000:,.0f} บาท")
+
+with tab11:
+    st.subheader("💳 ชำระเงินค่าบริการแอดมิน / อัปเกรดพรีเมียม")
+    st.info("🎯 **พร้อมเพย์:** 0XX-XXX-XXXX (ชื่อบัญชี: ศูนย์กลางมาร์เก็ตเพลส)")
+
+with tab12:
+    st.subheader("📞 ช่องทางติดต่อ & แจ้งเรื่องร้องเรียน")
+    with st.form("form_t12", clear_on_submit=True):
+        c_name = st.text_input("ชื่อ-นามสกุล")
+        c_tel = st.text_input("เบอร์โทรศัพท์")
+        c_msg = st.text_area("ข้อความ / แจ้งปัญหา / แนบสลิป")
+        if st.form_submit_button("📩 ส่งข้อความ"):
+            if c_name and c_tel and c_msg:
+                st.sessio
