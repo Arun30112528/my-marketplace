@@ -26,10 +26,11 @@ st.markdown("""
 st.markdown("""
     <div class="main-header">
         <h1>🌐 my-marketplace - ศูนย์กลางโซเชียล & ตลาดอสังหาฯ ทั่วไทย</h1>
-        <p>ฟีดไทม์ไลน์โพสต์จริง ระบบค้นหาบ้านเช่าทั่วไทย คำนวณสินเชื่อ และระบบ Escrow ปลอดภัย 100%</p>
+        <p>ฟีดไทม์ไลน์โพสต์จริง ระบบค้นหาบ้านเช่าทั่วไทย คำนวณสินเชื่อ และระบบชำระเงินปลอดภัย 100%</p>
     </div>
 """, unsafe_allow_html=True)
 
+# ฐานข้อมูลจำลองใน Session State
 if "timeline_posts" not in st.session_state:
     st.session_state.timeline_posts = [
         {"user": "คุณอรัญ (Fresh Food Manager - ปทุมธานี)", "time": "15 นาทีที่แล้ว", "text": "สวัสดีครับทุกท่าน! ใครกำลังจะย้ายจากต่างจังหวัดเข้ามาทำงานหรือหาบ้านเช่าโซนปทุมธานี ทักมาพูดคุยสอบถามได้เลยนะครับ 😊🏡"}
@@ -53,6 +54,7 @@ provinces_thailand = [
     "ชลบุรี", "ระยอง", "ภูเก็ต", "สงขลา", "สุราษฎร์ธานี", "พระนครศรีอยุธยา"
 ]
 
+# เมนูหลักการใช้งาน
 menu_option = st.selectbox("📌 เลือกเมนูการใช้งานหลัก:", [
     "📰 1. ฟีดไทม์ไลน์",
     "🏠 2. ค้นหาบ้านเช่า",
@@ -72,21 +74,23 @@ menu_option = st.selectbox("📌 เลือกเมนูการใช้�
 
 st.divider()
 
+# 1. ฟีดไทม์ไลน์
 if menu_option.startswith("📰"):
     st.subheader("📰 ฟีดไทม์ไลน์ชุมชนออนไลน์")
-    with st.form("f_post", clear_on_submit=True):
-        u_name = st.text_input("ชื่อของคุณ / จังหวัด")
-        u_text = st.text_area("คุณกำลังคิดอะไรอยู่ หรือต้องการหาบ้านเช่าที่ไหน?")
-        if st.form_submit_button("🚀 โพสต์ลงไทม์ไลน์"):
-            if u_name and u_text:
-                st.session_state.timeline_posts.insert(0, {"user": u_name, "time": "เมื่อสักครู่นี้", "text": u_text})
-                st.success("🎉 โพสต์สำเร็จ!")
-            else:
-                st.warning("⚠️ กรุณากรอกข้อมูลให้ครบ")
+    name_input = st.text_input("ชื่อของคุณ / จังหวัด")
+    text_input = st.text_area("คุณกำลังคิดอะไรอยู่ หรือต้องการหาบ้านเช่าที่ไหน?")
+    if st.button("🚀 โพสต์ลงไทม์ไลน์"):
+        if name_input and text_input:
+            st.session_state.timeline_posts.insert(0, {"user": name_input, "time": "เมื่อสักครู่นี้", "text": text_input})
+            st.success("🎉 โพสต์สำเร็จ!")
+        else:
+            st.warning("⚠️ กรุณากรอกข้อมูลให้ครบถ้วน")
 
+    st.markdown("### 💬 โพสต์ล่าสุด")
     for p in st.session_state.timeline_posts:
         st.markdown(f'<div class="card-box"><strong>👤 {p["user"]}</strong> <span style="color:gray; font-size:12px;">{p["time"]}</span><p style="margin-top:10px;">{p["text"]}</p></div>', unsafe_allow_html=True)
 
+# 2. ค้นหาบ้านเช่า
 elif menu_option.startswith("🏠"):
     st.subheader("📍 ระบบค้นหาบ้านเช่าและอสังหาริมทรัพย์ทั่วไทย")
     s_prov = st.selectbox("📍 เลือกจังหวัด", provinces_thailand)
@@ -96,6 +100,7 @@ elif menu_option.startswith("🏠"):
         if (s_prov == "--- ทุกจังหวัดทั่วไทย ---" or item["province"] == s_prov) and (s_type == "ทั้งหมด" or item["type"] == s_type):
             st.markdown(f'<div class="card-box"><h3>{item["title"]}</h3><p><strong>ราคา:</strong> {item["price"]:,} บาท/เดือน | <strong>ประเภท:</strong> {item["type"]}</p><p>{item["desc"]}</p><p style="color:gray; font-size:13px;">📍 จังหวัด: {item["province"]} | ผู้ติดต่อ: {item["seller"]}</p></div>', unsafe_allow_html=True)
 
+# 3. โซเชียล
 elif menu_option.startswith("🌐"):
     st.subheader("🌐 ศูนย์รวมลิงก์เชื่อมโยงโซเชียลมีเดีย")
     c1, c2, c3, c4 = st.columns(4)
@@ -104,52 +109,59 @@ elif menu_option.startswith("🌐"):
     with c3: st.markdown('<div class="card-box"><h3>📱 TikTok</h3><a href="https://www.tiktok.com" target="_blank">🔗 ไปที่ TikTok</a></div>', unsafe_allow_html=True)
     with c4: st.markdown('<div class="card-box"><h3>🛍️ Shopee</h3><a href="https://shopee.co.th" target="_blank">🔗 ไปที่ Shopee</a></div>', unsafe_allow_html=True)
 
+# 4. รีวิว YouTube
 elif menu_option.startswith("🔴"):
     st.subheader("🔴 วิดีโอรีวิวบ้านเช่า & โครงการ (YouTube Style)")
     st.video("https://www.youtube.com/watch?v=dQw4w9WgXcQ")
 
+# 5. คลิปสั้น TikTok
 elif menu_option.startswith("📱"):
     st.subheader("📱 คลิปสั้นรีวิวบ้านด่วน (TikTok Style)")
     st.info("🔥 **Reel #1:** คอนโดแต่งครบ 4,500 บ./เดือน (พร้อมเข้าอยู่)")
 
+# 6. ตลาดออนไลน์
 elif menu_option.startswith("🛒"):
     st.subheader("🛒 ตลาดสินค้าตกแต่งบ้าน")
     st.markdown('<div class="card-box"><h4>🛏️ ชุดเครื่องนอนพรีเมียม</h4><p>590 บาท</p><a href="https://shopee.co.th" target="_blank">🛒 สั่งซื้อผ่าน Shopee</a></div>', unsafe_allow_html=True)
 
+# 7. Escrow
 elif menu_option.startswith("🛡️"):
     st.subheader("🛡️ ระบบชำระเงินปลอดภัยผ่านคนกลาง (Escrow)")
     st.write("ระบบพักเงินปลอดภัย 100% ป้องกันการโดนโกงสำหรับผู้ย้ายมาอยู่ต่างจังหวัด")
 
+# 8. ลงประกาศใหม่
 elif menu_option.startswith("➕"):
     st.subheader("➕ ลงประกาศใหม่ (เพิ่มเข้าสู่ระบบค้นหาทันที)")
-    with st.form("f_add", clear_on_submit=True):
-        l_title = st.text_input("หัวข้อประกาศ")
-        l_prov = st.selectbox("จังหวัด", provinces_thailand[1:])
-        l_type = st.selectbox("ประเภท", ["บ้านเช่า / หอพัก", "บ้านเดี่ยว / ทาวน์โฮม", "คอนโดมิเนียม", "ที่ดิน"])
-        l_price = st.number_input("ราคาต่อเดือน (บาท)", min_value=0, step=500)
-        l_desc = st.text_area("รายละเอียด")
-        l_seller = st.text_input("ชื่อผู้ติดต่อ / เบอร์โทร")
-        if st.form_submit_button("💾 บันทึกประกาศ"):
-            if l_title and l_price > 0 and l_seller:
-                st.session_state.listings.insert(0, {"title": l_title, "province": l_prov, "price": l_price, "type": l_type, "desc": l_desc, "seller": l_seller})
-                st.success("🎉 บันทึกประกาศสำเร็จ!")
-            else:
-                st.warning("⚠️ กรุณากรอกข้อมูลให้ครบ")
+    l_title = st.text_input("หัวข้อประกาศ")
+    l_prov = st.selectbox("จังหวัด", provinces_thailand[1:])
+    l_type = st.selectbox("ประเภท", ["บ้านเช่า / หอพัก", "บ้านเดี่ยว / ทาวน์โฮม", "คอนโดมิเนียม", "ที่ดิน"])
+    l_price = st.number_input("ราคาต่อเดือน (บาท)", min_value=0, step=500)
+    l_desc = st.text_area("รายละเอียด")
+    l_seller = st.text_input("ชื่อผู้ติดต่อ / เบอร์โทร")
+    
+    if st.button("💾 บันทึกประกาศ"):
+        if l_title and l_price > 0 and l_seller:
+            st.session_state.listings.insert(0, {"title": l_title, "province": l_prov, "price": l_price, "type": l_type, "desc": l_desc, "seller": l_seller})
+            st.success("🎉 บันทึกประกาศสำเร็จ!")
+        else:
+            st.warning("⚠️ กรุณากรอกข้อมูลให้ครบถ้วน")
 
+# 9. บริการจัดไฟแนนซ์
 elif menu_option.startswith("🚗"):
     st.subheader("🚗 บริการจัดไฟแนนซ์รถยนต์ & รีไฟแนนซ์")
-    with st.form("f_fin", clear_on_submit=True):
-        f_name = st.text_input("ชื่อ-นามสกุล")
-        f_tel = st.text_input("เบอร์โทรศัพท์")
-        f_car = st.text_input("รุ่นรถยนต์ / ปี")
-        f_amt = st.number_input("วงเงินกู้ (บาท)", min_value=10000, step=10000)
-        if st.form_submit_button("📩 ส่งเรื่องขอสินเชื่อ"):
-            if f_name and f_tel:
-                st.session_state.finance_requests.append({"name": f_name, "tel": f_tel, "car": f_car, "amount": f_amt})
-                st.success("🎉 ส่งข้อมูลขอสินเชื่อสำเร็จ เจ้าหน้าที่กำลังติดต่อกลับ!")
-            else:
-                st.warning("⚠️ กรุณากรอกชื่อและเบอร์โทร")
+    f_name = st.text_input("ชื่อ-นามสกุล")
+    f_tel = st.text_input("เบอร์โทรศัพท์")
+    f_car = st.text_input("รุ่นรถยนต์ / ปี")
+    f_amt = st.number_input("วงเงินกู้ (บาท)", min_value=10000, step=10000)
+    
+    if st.button("📩 ส่งเรื่องขอสินเชื่อ"):
+        if f_name and f_tel:
+            st.session_state.finance_requests.append({"name": f_name, "tel": f_tel, "car": f_car, "amount": f_amt})
+            st.success("🎉 ส่งข้อมูลขอสินเชื่อสำเร็จ เจ้าหน้าที่กำลังติดต่อกลับ!")
+        else:
+            st.warning("⚠️ กรุณากรอกชื่อและเบอร์โทรศัพท์")
 
+# 10. คำนวณค่างวดผ่อนรถ
 elif menu_option.startswith("🚘"):
     st.subheader("🚘 เครื่องมือคำนวณค่างวดผ่อนชำระรถยนต์")
     c_price = st.number_input("ราคารถ (บาท)", min_value=50000, value=350000, step=10000)
@@ -162,6 +174,7 @@ elif menu_option.startswith("🚘"):
     st.metric(label="ยอดจัดไฟแนนซ์สุทธิ", value=f"{net_loan:,.0f} บาท")
     st.metric(label="ค่างวดผ่อนประมาณ / เดือน (รวม VAT 7%)", value=f"{m_pay * 1.07:,.0f} บาท")
 
+# 11. กู้บ้าน
 elif menu_option.startswith("🏦"):
     st.subheader("🏦 เครื่องมือคำนวณวงเงินกู้ซื้อบ้าน")
     sal = st.number_input("รายได้สุทธิต่อเดือน (บาท)", min_value=10000, value=30000, step=1000)
@@ -170,6 +183,7 @@ elif menu_option.startswith("🏦"):
     st.metric(label="ค่างวดผ่อนบ้านสูงสุด / เดือน", value=f"{net_inc * 0.40:,.0f} บาท")
     st.metric(label="ประมาณการวงเงินกู้ซื้อบ้านสูงสุด", value=f"{((net_inc * 0.40) / 7000) * 1000000:,.0f} บาท")
 
+# 12. ชำระเงิน
 elif menu_option.startswith("💳"):
     st.subheader("💳 ชำระเงินค่าบริการแอดมิน / อัปเกรดพรีเมียม")
     st.write("สแกน QR Code พร้อมเพย์ด้านล่างนี้เพื่อโอนเงินเข้าบัญชี")
@@ -185,18 +199,20 @@ elif menu_option.startswith("💳"):
         </div>
         """, unsafe_allow_html=True)
     with col_q2:
-        if os.path.exists("qr_code.jpg"):
-            st.image("qr_code.jpg", caption="สแกน QR Code เพื่อชำระเงิน", width=300)
-        elif os.path.exists("qr_code.png"):
-            st.image("qr_code.png", caption="สแกน QR Code เพื่อชำระเงิน", width=300)
-        else:
-            st.info("💡 สามารถบันทึกสลิปแล้วส่งแจ้งแอดมินได้ที่เมนูติดต่อ / แจ้งเรื่องร้องเรียน")
+        st.info("💡 สามารถโอนเงินและบันทึกสลิป แล้วส่งแจ้งแอดมินได้ที่เมนูถัดไป (ติดต่อ / ร้องเรียน)")
 
+# 13. ติดต่อ / ร้องเรียน
 elif menu_option.startswith("📞"):
     st.subheader("📞 ช่องทางติดต่อ & แจ้งเรื่องร้องเรียน / ส่งสลิปโอนเงิน")
-    with st.form("form_contact_safe", clear_on_submit=True):
-        input_name = st.text_input("ชื่อ-นามสกุล")
-        input_phone = st.text_input("เบอร์โทรศัพท์")
-        input_text = st.text_area("ข้อความ / แจ้งปัญหา / แนบแจ้งหลักฐานการโอนเงิน (สลิป)")
-        
-        submitted = st.form_submit_button(
+    input_name = st.text_input("ชื่อ-นามสกุล")
+    input_phone = st.text_input("เบอร์โทรศัพท์")
+    input_text = st.text_area("ข้อความ / แจ้งปัญหา / แนบแจ้งหลักฐานการโอนเงิน (สลิป)")
+    
+    if st.button("📩 ส่งข้อมูลหาแอดมิน"):
+        if input_name and input_phone and input_text:
+            st.session_state.contacts.append({
+                "name": input_name, 
+                "tel": input_phone, 
+                "msg": input_text
+            })
+            st.success("🎉 ส่งข้อความสำเร็จ! แอดมิน
