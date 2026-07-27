@@ -194,9 +194,9 @@ elif menu_option.startswith("💳"):
 
 elif menu_option.startswith("📞"):
     st.subheader("📞 ช่องทางติดต่อ & แจ้งเรื่องร้องเรียน / ส่งสลิปโอนเงิน")
-    with st.form("f_con", clear_on_submit=True):
-        c_name = st.text_input("ชื่อ-นามสกุล")
-        c_tel = st.text_input("เบอร์โทรศัพท์")
-        c_msg = st.text_area("ข้อความ / แจ้งปัญหา / แนบแจ้งหลักฐานการโอนเงิน (สลิป)")
+    with st.form("form_contact_new", clear_on_submit=True):
+        input_name = st.text_input("ชื่อ-นามสกุล")
+        input_phone = st.text_input("เบอร์โทรศัพท์")
+        input_text = st.text_area("ข้อความ / แจ้งปัญหา / แนบแจ้งหลักฐานการโอนเงิน (สลิป)")
         if st.form_submit_button("📩 ส่งข้อมูล"):
-            if c_name and c_t
+   
