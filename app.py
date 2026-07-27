@@ -3,9 +3,6 @@ import os
 
 st.set_page_config(page_title="my-marketplace | ศูนย์กลางโซเชียล & อีคอมเมิร์ซทั่วไทย", page_icon="🌐", layout="wide")
 
-# ---------------------------------------------------------
-# 🎨 Custom CSS แต่งหน้าเว็บให้พรีเมียมทันสมัย
-# ---------------------------------------------------------
 st.markdown("""
     <style>
     .main-header {
@@ -47,9 +44,6 @@ st.markdown("""
     </div>
 """, unsafe_allow_html=True)
 
-# ---------------------------------------------------------
-# 🗄️ Database จำลองใน Session State (เพื่อให้ทุกฟังก์ชันทำงานจริง)
-# ---------------------------------------------------------
 if "timeline_posts" not in st.session_state:
     st.session_state.timeline_posts = [
         {"user": "คุณอรัญ (Fresh Food Manager - ปทุมธานี)", "time": "15 นาทีที่แล้ว", "text": "สวัสดีครับทุกท่าน! ใครกำลังจะย้ายจากต่างจังหวัดเข้ามาทำงานหรือหาบ้านเช่าโซนปทุมธานี ทักมาพูดคุยหรือโพสต์สอบถามได้เลยนะครับ 😊🏡"},
@@ -63,7 +57,6 @@ if "listings" not in st.session_state:
         {"title": "🏡 บ้านเดี่ยวสองชั้น บรรยากาศธรรมชาติ", "province": "เชียงใหม่", "price": 15000, "type": "บ้านเดี่ยว / ทาวน์โฮม", "desc": "วิวภูเขา อากาศดี เหมาะแก่การพักผ่อน", "seller": "คุณA"}
     ]
 
-# เมนูหลักของเว็บไซต์
 tabs = st.tabs([
     "📰 ฟีดไทม์ไลน์",
     "🏠 ค้นหาบ้านเช่า",
@@ -88,9 +81,6 @@ provinces_thailand = [
     "ชลบุรี", "ระยอง", "ภูเก็ต", "สงขลา", "สุราษฎร์ธานี", "พระนครศรีอยุธยา"
 ]
 
-# =========================================================
-# TAB 0: ฟีดไทม์ไลน์ (ใช้งานจริง โพสต์แล้วขึ้นทันที)
-# =========================================================
 with tabs[0]:
     st.subheader("📰 ฟีดไทม์ไลน์ชุมชนออนไลน์ (Community Timeline)")
     st.write("พื้นที่แชร์เรื่องราว อัปเดตสถานะ ประกาศหาบ้านเช่า หรือพูดคุยแลกเปลี่ยนข้อมูลกันได้ทันที!")
@@ -119,9 +109,6 @@ with tabs[0]:
             </div>
         ''', unsafe_allow_html=True)
 
-# =========================================================
-# TAB 1: ค้นหาบ้านเช่า (ดึงข้อมูลจากระบบจริงทั่วไทย)
-# =========================================================
 with tabs[1]:
     st.subheader("📍 ระบบค้นหาอสังหาฯ และบ้านเช่าแม่นยำทั่วประเทศไทย")
     with st.container():
@@ -148,27 +135,20 @@ with tabs[1]:
             match = False
         elif sel_price == "20,000 บาทขึ้นไป" and item["price"] <= 20000:
             match = False
-        
         if match:
             filtered_list.append(item)
 
     st.subheader(f"📌 ผลการค้นหาพบทั้งหมด {len(filtered_list)} รายการ")
-    if len(filtered_list) == 0:
-        st.info("🔍 ไม่พบประกาศในเงื่อนไขนี้ ท่านสามารถไปที่แท็บ 'ลงประกาศ' เพื่อเพิ่มข้อมูลได้เลยครับ")
-    else:
-        for item in filtered_list:
-            st.markdown(f'''
-                <div class="listing-card">
-                    <h3>{item['title']}</h3>
-                    <p><strong>ค่าเช่า/ราคา:</strong> {item['price']:,} บาท/เดือน | <strong>ประเภท:</strong> {item['type']}</p>
-                    <p>{item['desc']}</p>
-                    <p style="color: gray; font-size: 13px;">📍 จังหวัด: {item['province']} | ผู้ลงประกาศ: {item['seller']}</p>
-                </div>
-            ''', unsafe_allow_html=True)
+    for item in filtered_list:
+        st.markdown(f'''
+            <div class="listing-card">
+                <h3>{item['title']}</h3>
+                <p><strong>ค่าเช่า/ราคา:</strong> {item['price']:,} บาท/เดือน | <strong>ประเภท:</strong> {item['type']}</p>
+                <p>{item['desc']}</p>
+                <p style="color: gray; font-size: 13px;">📍 จังหวัด: {item['province']} | ผู้ลงประกาศ: {item['seller']}</p>
+            </div>
+        ''', unsafe_allow_html=True)
 
-# =========================================================
-# TAB 2: โซเชียล
-# =========================================================
 with tabs[2]:
     st.subheader("🌐 ศูนย์รวมลิงก์เชื่อมโยงโซเชียลมีเดีย")
     col_s1, col_s2, col_s3, col_s4 = st.columns(4)
@@ -181,9 +161,6 @@ with tabs[2]:
     with col_s4:
         st.markdown('<div class="social-card"><h3>🛍️ Shopee / Lazada</h3><a href="https://shopee.co.th" target="_blank">🔗 ไปที่ Shopee</a></div>', unsafe_allow_html=True)
 
-# =========================================================
-# TAB 3: รีวิว YouTube
-# =========================================================
 with tabs[3]:
     st.subheader("🔴 วิดีโอรีวิวบ้านเช่า & โครงการ (YouTube Style)")
     c1, c2 = st.columns(2)
@@ -192,9 +169,6 @@ with tabs[3]:
     with c2:
         st.video("https://www.youtube.com/watch?v=dQw4w9WgXcQ")
 
-# =========================================================
-# TAB 4: คลิปสั้น TikTok
-# =========================================================
 with tabs[4]:
     st.subheader("📱 คลิปสั้นรีวิวบ้านด่วน (TikTok Style Reels)")
     t1, t2, t3 = st.columns(3)
@@ -205,9 +179,6 @@ with tabs[4]:
     with t3:
         st.info("🏡 **Reel #3:** บ้านเดี่ยวเชียงใหม่")
 
-# =========================================================
-# TAB 5: ตลาดออนไลน์
-# =========================================================
 with tabs[5]:
     st.subheader("🛒 ตลาดสินค้าตกแต่งบ้าน (Shopee / Lazada Style)")
     p1, p2, p3 = st.columns(3)
@@ -216,4 +187,37 @@ with tabs[5]:
     with p2:
         st.markdown('<div class="social-card"><h4>🪑 โต๊ะทำงาน</h4><p>450 บาท</p><a href="https://shopee.co.th" target="_blank">🛒 สั่งซื้อ</a></div>', unsafe_allow_html=True)
     with p3:
-        st.markdown('<div class="social-card"><h4>💡 หลอดไฟอัจฉริยะ</h4><p>199 บาท</p><a href="https://shopee.co.th" target="_blank">🛒 สั่งซื้อ</a></
+        st.markdown('<div class="social-card"><h4>💡 หลอดไฟอัจฉริยะ</h4><p>199 บาท</p><a href="https://shopee.co.th" target="_blank">🛒 สั่งซื้อ</a></div>', unsafe_allow_html=True)
+
+with tabs[6]:
+    st.subheader("🛡️ ระบบชำระเงินปลอดภัยผ่านคนกลาง (Escrow)")
+    st.write("ระบบพักเงินปลอดภัย 100% สำหรับผู้ซื้อและผู้เช่า")
+
+with tabs[7]:
+    st.subheader("➕ ลงประกาศใหม่ (เพิ่มข้อมูลเข้าสู่ระบบค้นหาทันที)")
+    with st.form("real_listing_form", clear_on_submit=True):
+        l_title = st.text_input("หัวข้อประกาศ")
+        l_prov = st.selectbox("เลือกจังหวัด", provinces_thailand[1:])
+        l_type = st.selectbox("ประเภทอสังหาริมทรัพย์", ["บ้านเช่า / หอพัก", "บ้านเดี่ยว / ทาวน์โฮม", "คอนโดมิเนียม", "ที่ดิน"])
+        l_price = st.number_input("ราคา / ค่าเช่าต่อเดือน (บาท)", min_value=0, step=500)
+        l_desc = st.text_area("รายละเอียดเพิ่มเติม")
+        l_seller = st.text_input("ชื่อผู้ติดต่อ / เบอร์โทร")
+        
+        if st.form_submit_button("💾 บันทึกและเผยแพร่ประกาศ"):
+            if l_title and l_price > 0 and l_seller:
+                new_item = {
+                    "title": l_title,
+                    "province": l_prov,
+                    "price": l_price,
+                    "type": l_type,
+                    "desc": l_desc,
+                    "seller": l_seller
+                }
+                st.session_state.listings.insert(0, new_item)
+                st.success("🎉 บันทึกประกาศสำเร็จ! ข้อมูลถูกเพิ่มเข้าไปในระบบค้นหาเรียบร้อยแล้วครับ")
+            else:
+                st.warning("⚠️ กรุณากรอกข้อมูลให้ครบถ้วน")
+
+with tabs[8]:
+    st.subheader("🚗 บริการจัดไฟแนนซ์รถยนต์ & รีไฟแนนซ์")
+ 
