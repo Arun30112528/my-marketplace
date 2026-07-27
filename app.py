@@ -57,15 +57,80 @@ tabs = st.tabs([
 ])
 
 # =========================================================
-# TAB 1: ค้นหาประกาศทั้งหมด
+# TAB 1: ค้นหาประกาศทั้งหมด (Mock Data Engine)
 # =========================================================
 with tabs[0]:
     st.subheader("🔍 ค้นหาบ้าน คอนโด รถยนต์ และสินค้ามือสอง")
     
+    # ฐานข้อมูลจำลอง (Mock Data Database)
+    mock_listings = [
+        {
+            "id": 1,
+            "title": "🚗 Toyota Yaris Ativ 1.2 E ปี 2020 (เกียร์ออโต้)",
+            "category": "🚗 รถยนต์มือสอง",
+            "price": 359000,
+            "price_text": "359,000 บาท (ฟรีดาวน์ / ผ่อนประมาณ 6,xxx บาท/เดือน)",
+            "details": "รถบ้านสภาพสวยเดิมๆ ไม่เคยชนหนัก เลขไมล์ 45,000 กม. เช็กศูนย์ตลอด เจ้าของขายเอง",
+            "location": "ปทุมธานี",
+            "seller": "คุณสมชาย",
+            "verified": True,
+            "img": "https://via.placeholder.com/400x250.png?text=Toyota+Yaris+Ativ+2020"
+        },
+        {
+            "id": 2,
+            "title": "🚗 Honda Civic FC 1.8 EL ปี 2018 (เกียร์ออโต้)",
+            "category": "🚗 รถยนต์มือสอง",
+            "price": 529000,
+            "price_text": "529,000 บาท (ผ่อนประมาณ 9,xxx บาท/เดือน)",
+            "details": "ตัวท็อปออปชั่นเต็ม เบาะหนัง ปรับไฟฟ้า ปุ่ม Push Start เอกสารเล่มพร้อมโอนทันที",
+            "location": "กรุงเทพฯ และปริมณฑล",
+            "seller": "คุณวิชัย (เต็นท์รถ VIP)",
+            "verified": True,
+            "img": "https://via.placeholder.com/400x250.png?text=Honda+Civic+FC+2018"
+        },
+        {
+            "id": 3,
+            "title": "🏠 ขายบ้านเดี่ยว 2 ชั้น 4 ห้องนอน 3 ห้องน้ำ หมู่บ้านภัทรินทร์ ปทุมธานี",
+            "category": "🏠 อสังหาริมทรัพย์",
+            "price": 3490000,
+            "price_text": "3,490,000 บาท (กู้ได้เต็ม 100%)",
+            "details": "เนื้อที่ 52 ตร.วา พร้อมเฟอร์นิเจอร์บางส่วน บรรยากาศร่มรื่น ใกล้ศูนย์ราชการและโลตัสปทุมธานี",
+            "location": "ปทุมธานี",
+            "seller": "คุณอรัญ (นายหน้า VIP)",
+            "verified": True,
+            "img": "https://via.placeholder.com/400x250.png?text=Single+House+Pathumthani"
+        },
+        {
+            "id": 4,
+            "title": "🏠 ขายคอนโด Plum Condo รังสิต เฟส 1 ชั้น 5 ตึก A",
+            "category": "🏠 อสังหาริมทรัพย์",
+            "price": 1250000,
+            "price_text": "1,250,000 บาท (เหมาะสำหรับลงทุนปล่อยเช่า)",
+            "details": "ห้องสวย สภาพใหม่ แถมเครื่องใช้ไฟฟ้าครบชุด ตู้เย็น แอร์ TV ติด ม.กรุงเทพ รังสิต",
+            "location": "ปทุมธานี",
+            "seller": "คุณนภา",
+            "verified": False,
+            "img": "https://via.placeholder.com/400x250.png?text=Plum+Condo+Rangsit"
+        },
+        {
+            "id": 5,
+            "title": "📦 iPhone 13 Pro 128GB สี Sierra Blue สภาพสวย 95%",
+            "category": "📦 สินค้าทั่วไป",
+            "price": 18500,
+            "price_text": "18,500 บาท",
+            "details": "เครื่องไทยการ์ดแท้ สุขภาพแบตเตอรี่ 88% แถมเคสแท้และสายชาร์จ นัดรับได้ที่โลตัสปทุมธานี",
+            "location": "ปทุมธานี",
+            "seller": "คุณกิตติ",
+            "verified": True,
+            "img": "https://via.placeholder.com/400x250.png?text=iPhone+13+Pro"
+        }
+    ]
+
+    # --- แถบตัวกรองการค้นหา (Search Filter) ---
     with st.expander("🎯 ตัวกรองการค้นหาขั้นสูง (คลิกเพื่อเปิด/ปิด)", expanded=True):
         col_f1, col_f2, col_f3, col_f4 = st.columns(4)
         with col_f1:
-            search_kw = st.text_input("คีย์เวิร์ดค้นหา (เช่น Nissan, คอนโด, ปทุมธานี)")
+            search_kw = st.text_input("คีย์เวิร์ดค้นหา (เช่น Toyota, บ้าน, คอนโด)").strip().lower()
         with col_f2:
             search_cat = st.selectbox("หมวดหมู่สินค้า", ["ทั้งหมด", "🚗 รถยนต์มือสอง", "🏠 อสังหาริมทรัพย์", "📦 สินค้าทั่วไป"])
         with col_f3:
@@ -73,42 +138,59 @@ with tabs[0]:
         with col_f4:
             search_province = st.selectbox("จังหวัด/พื้นที่", ["ทั้งหมด", "ปทุมธานี", "กรุงเทพฯ และปริมณฑล", "ต่างจังหวัด"])
 
+    # ประมวลผลการกรองข้อมูล
+    filtered_listings = []
+    for item in mock_listings:
+        match = True
+        
+        # กรองคีย์เวิร์ด
+        if search_kw and (search_kw not in item["title"].lower() and search_kw not in item["details"].lower()):
+            match = False
+            
+        # กรองหมวดหมู่
+        if search_cat != "ทั้งหมด" and item["category"] != search_cat:
+            match = False
+            
+        # กรองจังหวัด
+        if search_province != "ทั้งหมด" and item["location"] != search_province:
+            match = False
+            
+        # กรองราคา
+        if search_price == "ต่ำกว่า 100,000 บาท" and item["price"] >= 100000:
+            match = False
+        elif search_price == "100,000 - 500,000 บาท" and not (100000 <= item["price"] <= 500000):
+            match = False
+        elif search_price == "500,000 - 2,000,000 บาท" and not (500000 <= item["price"] <= 2000000):
+            match = False
+        elif search_price == "2,000,000 บาทขึ้นไป" and item["price"] < 2000000:
+            match = False
+
+        if match:
+            filtered_listings.append(item)
+
     st.divider()
-    st.subheader("📌 ประกาศแนะนำ / ประกาศล่าสุด")
+    st.subheader(f"📌 ผลการค้นหาพบทั้งหมด {len(filtered_listings)} รายการ")
     
-    # ตัวอย่างประกาศที่ 1 (รถยนต์)
-    with st.container():
-        col_img1, col_detail1 = st.columns([1, 2])
-        with col_img1:
-            st.image("https://via.placeholder.com/400x250.png?text=Nissan+Almera+2014", caption="Nissan Almera 1.2 E ปี 2014", use_column_width=True)
-        with col_detail1:
-            st.markdown("### 🚗 **Nissan Almera 1.2 E ปี 2014 (เกียร์ออโต้)**")
-            st.markdown("**ราคา: 189,000 บาท** (ฟรีดาวน์ / ผ่อนประมาณ 3,xxx บาท/เดือน)")
-            st.write("สภาพดีพร้อมใช้งาน เครื่องยนต์ดีเยี่ยม รถบ้านมือเดียว เลขไมล์น้อย ตรวจเช็กเล่มทะเบียนเรียบร้อยแล้ว")
-            st.caption("📍 พิกัด: อ.เมือง จ.ปทุมธานี | ผู้ขาย: คุณอรัญ (นายหน้า Verified)")
-            
-            col_act1, col_act2, col_act3 = st.columns(3)
-            col_act1.button("📞 โทรหาผู้ขายด่วน", key="call1")
-            col_act2.button("💬 ทัก LINE ผู้ขาย", key="line1")
-            col_act3.button("🛡️ ซื้อผ่านระบบคนกลาง", key="escrow1")
-
-    st.divider()
-
-    # ตัวอย่างประกาศที่ 2 (บ้าน)
-    with st.container():
-        col_img2, col_detail2 = st.columns([1, 2])
-        with col_img2:
-            st.image("https://via.placeholder.com/400x250.png?text=Townhome+Pathumthani", caption="ทาวน์โฮม 2 ชั้น ปทุมธานี", use_column_width=True)
-        with col_detail2:
-            st.markdown("### 🏠 **ขายทาวน์โฮม 2 ชั้น 3 ห้องนอน 2 ห้องน้ำ ใกล้โลตัสปทุมธานี**")
-            st.markdown("**ราคา: 1,950,000 บาท** (กู้ได้เต็ม 100%)")
-            st.write("เนื้อที่ 20 ตร.วา ต่อเติมครัวไทยและโรงจอดรถเรียบร้อย ทำเลดีเดินทางสะดวก ใกล้ตลาดและสถานศึกษา")
-            st.caption("📍 พิกัด: อ.เมือง จ.ปทุมธานี | ผู้ขาย: คุณอรัญ")
-            
-            col_act4, col_act5, col_act6 = st.columns(3)
-            col_act4.button("📞 โทรหาผู้ขายด่วน", key="call2")
-            col_act5.button("💬 ทัก LINE ผู้ขาย", key="line2")
-            col_act6.button("🏦 เช็กวงเงินกู้บ้านนี้", key="loan2")
+    if len(filtered_listings) == 0:
+        st.warning("⚠️ ไม่พบรายการประกาศที่ตรงกับเงื่อนไขการค้นหา กรุณาลองปรับเปลี่ยนตัวกรองครับ")
+    else:
+        for idx, item in enumerate(filtered_listings):
+            with st.container():
+                col_img, col_detail = st.columns([1, 2])
+                with col_img:
+                    st.image(item["img"], caption=item["title"], use_column_width=True)
+                with col_detail:
+                    v_badge = " ✨ *(Verified Seller)*" if item["verified"] else ""
+                    st.markdown(f"### {item['title']}{v_badge}")
+                    st.markdown(f"**ราคา:** {item['price_text']}")
+                    st.write(item["details"])
+                    st.caption(f"📍 พิกัด: {item['location']} | ผู้ขาย: {item['seller']}")
+                    
+                    col_act1, col_act2, col_act3 = st.columns(3)
+                    col_act1.button("📞 โทรหาผู้ขายด่วน", key=f"call_{idx}")
+                    col_act2.button("💬 ทัก LINE ผู้ขาย", key=f"line_{idx}")
+                    col_act3.button("🛡️ ซื้อผ่านระบบคนกลาง", key=f"escrow_{idx}")
+            st.divider()
 
 # =========================================================
 # TAB 2: ระบบชำระเงินผ่านคนกลาง (Escrow)
@@ -140,66 +222,4 @@ with tabs[1]:
             
         st.divider()
         st.markdown("#### 3️⃣ สถานะคำสั่งซื้อ & กดยืนยันรับของ")
-        st.info("📌 **สถานะปัจจุบัน:** รอผู้ซื้อโอนเงิน ➔ รอผู้ขายจัดส่ง ➔ **[กดปุ่มด้านล่างเมื่อได้รับของแล้ว]**")
-        
-        if st.button("✅ กดยืนยัน 'ได้รับสินค้าถูกต้อง' (เพื่อปล่อยเงินให้ผู้ขาย)"):
-            st.balloons()
-            st.success("🎉 ยืนยันสำเร็จ! ระบบได้ทำการโอนเงินตรงเข้าบัญชีผู้ขายเรียบร้อยแล้ว ขอบคุณที่ใช้บริการครับ")
-
-# =========================================================
-# TAB 3: ลงประกาศใหม่
-# =========================================================
-with tabs[2]:
-    st.subheader("กรอกข้อมูลลงประกาศ (ฟรี 100%)")
-    category = st.selectbox("เลือกหมวดหมู่ที่ต้องการลงประกาศ", ["🚗 รถยนต์มือสอง / ยานพาหนะ", "🏠 อสังหาริมทรัพย์ (บ้าน/คอนโด/ที่ดิน)", "📦 สินค้าทั่วไปมือสอง"])
-    
-    with st.form("listing_form"):
-        title = st.text_input("หัวข้อประกาศ (เช่น ขาย Nissan Almera ปี 2014 / ขายบ้านเดี่ยว 2 ชั้น)")
-        if "รถยนต์" in category:
-            col_car1, col_car2, col_car3 = st.columns(3)
-            with col_car1:
-                car_brand = st.text_input("ยี่ห้อ / รุ่น (เช่น Nissan Almera, Toyota Vios)")
-            with col_car2:
-                car_year = st.number_input("ปี ค.ศ. (เช่น 2014)", min_value=1990, max_value=2026, value=2014)
-            with col_car3:
-                car_mileage = st.number_input("ระยะทางวิ่ง / เลขไมล์ (กม.)", min_value=0, step=5000)
-            car_gear = st.radio("ระบบเกียร์", ["เกียร์ออโต้ (AT)", "เกียร์ธรรมดา (MT)"], horizontal=True)
-
-        price_item = st.number_input("ราคาขาย (บาท)", min_value=0, step=1000)
-        details = st.text_area("รายละเอียดเพิ่มเติม / สภาพสินค้า")
-        contact_name = st.text_input("ชื่อผู้ติดต่อ")
-        phone = st.text_input("เบอร์โทรศัพท์ / LINE ID")
-        
-        submitted = st.form_submit_button("ส่งข้อมูลลงประกาศ")
-        if submitted:
-            st.success("🎉 บันทึกข้อมูลประกาศเรียบร้อยแล้ว!")
-
-# =========================================================
-# TAB 4: ธุรกรรม & จัดไฟแนนซ์รถยนต์
-# =========================================================
-with tabs[3]:
-    st.subheader("🚗 บริการธุรกรรมทางการเงินสำหรับรถยนต์มือสองครบวงจร")
-    col_fin1, col_fin2 = st.columns([1, 1])
-    with col_fin1:
-        st.markdown("""
-        #### 📋 บริการของเรา:
-        * 🔑 **จัดไฟแนนซ์รถมือสอง:** ผ่อนสบายสูงสุด 84 เดือน ไม่ต้องมีผู้ค้ำประกัน
-        * 🔄 **รีไฟแนนซ์ / ปิดบัญชี:** ย้ายไฟแนนซ์เดิม ลดดอกเบี้ย ดึงเงินสดออกมาใช้
-        * 📑 **จำนำเล่มทะเบียน:** มีรถใช้ มีเงินใชอนุมัติไวภายใน 1 วัน
-        """)
-        st.success("✅ ประเมินยอดจัดฟรี! บริการเซ็นสัญญาถึงบ้านทั่วประเทศ")
-
-    with col_fin2:
-        with st.form("car_finance_form"):
-            fin_type = st.selectbox("เลือกบริการที่ต้องการ", ["จัดไฟแนนซ์ซื้อรถมือสอง", "รีไฟแนนซ์ / ย้ายไฟแนนซ์", "จำนำเล่มทะเบียน (ยืมเงินสด)", "ประเมินราคากลางรถยนต์"])
-            car_info = st.text_input("ยี่ห้อ / รุ่น / ปีรถ (เช่น Nissan Almera ปี 2014)")
-            request_amount = st.number_input("วงเงินที่ต้องการกู้ (บาท)", min_value=10000, step=10000)
-            user_name = st.text_input("ชื่อ-นามสกุล ผู้ขอปรึกษา")
-            user_tel = st.text_input("เบอร์โทรศัพท์ติดต่อกลับ")
-            submit_fin = st.form_submit_button("📩 ยื่นเรื่องขอประเมินวงเงินฟรี")
-            if submit_fin:
-                st.success("🎉 ยื่นข้อมูลเรียบร้อยแล้ว! เจ้าหน้าที่ฝ่ายสินเชื่อจะติดต่อกลับโดยด่วนครับ")
-
-# =========================================================
-# TAB 5: คำนวณค่างวดผ่อนรถ
-# ====================================
+        st.info("📌 **สถานะปัจจุบัน:** รอผู้ซื้อโอนเงิน ➔ รอผู้ขายจัดส่ง ➔ **[กดปุ่มด้านล่างเมื่อได้รับของแล
