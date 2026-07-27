@@ -1,12 +1,8 @@
 import streamlit as st
 import os
 
-# ตั้งค่าหน้าเว็บให้เต็มจอและทันสมัย
 st.set_page_config(page_title="my-marketplace | ศูนย์กลางโซเชียล & อีคอมเมิร์ซทั่วไทย", page_icon="🌐", layout="wide")
 
-# ---------------------------------------------------------
-# 🎨 Custom CSS แต่งหน้าเว็บให้ดูพรีเมียม ดึงดูดสายตา
-# ---------------------------------------------------------
 st.markdown("""
     <style>
     .main-header {
@@ -49,7 +45,6 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# ส่วนหัวหลักของเว็บ
 st.markdown("""
     <div class="main-header">
         <h1>🌐 my-marketplace - ฟีดไทม์ไลน์ & ศูนย์กลางทั่วไทย</h1>
@@ -57,18 +52,17 @@ st.markdown("""
     </div>
 """, unsafe_allow_html=True)
 
-# เมนูหลักของเว็บไซต์ (วางแท็บไทม์ไลน์ไว้ลำดับต้นๆ เพื่อดึงดูดผู้ใช้)
 tabs = st.tabs([
-    "📰 ฟีดไทม์ไลน์ (Timeline ยอดฮิต)",
-    "🏠 ค้นหาบ้านเช่า (ทั่วไทย)",
-    "🌐 โซเชียล & ร้านค้า",
-    "🔴 รีวิว (YouTube)",
-    "📱 คลิปสั้น (TikTok)",
+    "📰 ฟีดไทม์ไลน์",
+    "🏠 ค้นหาบ้านเช่า",
+    "🌐 โซเชียล",
+    "🔴 รีวิว",
+    "📱 คลิปสั้น",
     "🛒 ตลาดออนไลน์",
-    "🛡️ ระบบ Escrow",
+    "🛡️ Escrow",
     "➕ ลงประกาศ", 
-    "🚗 จัดไฟแนนซ์",
-    "🚘 คำนวณค่างวด",
+    "🚗 ไฟแนนซ์",
+    "🚘 ค่างวด",
     "🏦 กู้บ้าน",
     "💳 ชำระเงิน", 
     "📞 ติดต่อ",
@@ -82,14 +76,10 @@ provinces_thailand = [
     "ชลบุรี", "ระยอง", "ภูเก็ต", "สงขลา", "สุราษฎร์ธานี", "พระนครศรีอยุธยา"
 ]
 
-# =========================================================
-# TAB 0: ฟีดไทม์ไลน์ (Timeline ยอดฮิต - ดึงดูดผู้ใช้)
-# =========================================================
 with tabs[0]:
     st.subheader("📰 ฟีดไทม์ไลน์ชุมชนออนไลน์ (Community Timeline)")
-    st.write("พื้นที่แชร์เรื่องราว อัปเดตสถานะ ประกาศหาบ้านเช่า หรือพูดคุยแลกเปลี่ยนข้อมูลกันได้สดๆ ที่นี่ครับ!")
+    st.write("พื้นที่แชร์เรื่องราว อัปเดตสถานะ ประกาศหาบ้านเช่า หรือพูดคุยแลกเปลี่ยนข้อมูลกันได้ที่นี่ครับ!")
 
-    # กล่องสร้างโพสต์สไตล์ Facebook
     with st.container():
         st.markdown('<div class="timeline-card">', unsafe_allow_html=True)
         st.markdown("##### ✍️ คุณกำลังคิดอะไรอยู่? หรือต้องการหาบ้านเช่าจังหวัดไหน โพสต์บอกเพื่อนๆ ได้เลย")
@@ -105,7 +95,6 @@ with tabs[0]:
 
     st.markdown("### 🔥 โพสต์ยอดฮิตในชุมชนตอนนี้")
 
-    # ตัวอย่างโพสต์จำลองในไทม์ไลน์
     timeline_posts = [
         {"user": "คุณอรัญ (Fresh Food Manager - ปทุมธานี)", "time": "15 นาทีที่แล้ว", "text": "สวัสดีครับทุกท่าน! ใครกำลังจะย้ายจากต่างจังหวัดเข้ามาทำงานหรือหาบ้านเช่าโซนปทุมธานี ทักมาพูดคุยหรือโพสต์สอบถามในฟีดนี้ได้เลยนะครับ ยินดีต้อนรับครับผม 😊🏡"},
         {"user": "คุณสมชาย (ตัวแทนอสังหาฯ - กรุงเทพฯ)", "time": "1 ชั่วโมงที่แล้ว", "text": "อัปเดตบ้านเช่าและคอนโดพร้อมอยู่ทั่วกรุงเทพฯ และปริมณฑล ราคาประหยัด สนใจดูรายละเอียดกดที่แท็บค้นหาได้เลยครับ 🏢✨"},
@@ -124,20 +113,17 @@ with tabs[0]:
             </div>
         ''', unsafe_allow_html=True)
 
-# =========================================================
-# TAB 1: ค้นหาบ้านเช่า (ทั่วไทย)
-# =========================================================
 with tabs[1]:
     st.subheader("📍 ระบบค้นหาอสังหาฯ และบ้านเช่าแม่นยำทั่วประเทศไทย")
     with st.container():
         st.markdown('<div class="highlight-box">', unsafe_allow_html=True)
         col_loc1, col_loc2, col_loc3 = st.columns(3)
         with col_loc1:
-            selected_province = st.selectbox("📍 เลือกจังหวัดที่ต้องการหาที่พัก", provinces_thailand)
+            selected_province = st.selectbox("📍 เลือกจังหวัด", provinces_thailand)
         with col_loc2:
-            property_type = st.selectbox("🏠 ประเภทอสังหาริมทรัพย์", ["ทั้งหมด", "บ้านเช่า / หอพัก", "บ้านเดี่ยว / ทาวน์โฮม", "คอนโดมิเนียม", "ที่ดิน"])
+            property_type = st.selectbox("🏠 ประเภท", ["ทั้งหมด", "บ้านเช่า / หอพัก", "บ้านเดี่ยว / ทาวน์โฮม", "คอนโดมิเนียม", "ที่ดิน"])
         with col_loc3:
-            price_range = st.selectbox("💰 ช่วงราคา / ค่าเช่า", ["ทั้งหมด", "ต่ำกว่า 5,000 บาท/เดือน", "5,000 - 10,000 บาท/เดือน", "10,000 - 20,000 บาท/เดือน", "20,000 บาทขึ้นไป"])
+            price_range = st.selectbox("💰 ช่วงราคา", ["ทั้งหมด", "ต่ำกว่า 5,000 บาท/เดือน", "5,000 - 10,000 บาท/เดือน", "10,000 - 20,000 บาท/เดือน", "20,000 บาทขึ้นไป"])
         st.markdown('</div>', unsafe_allow_html=True)
 
     all_listings = [
@@ -157,11 +143,8 @@ with tabs[1]:
             st.button("📞 ติดต่อผู้ลงประกาศ", key=f"btn_{item['title']}")
             st.divider()
 
-# =========================================================
-# TAB 2 - 13: ฟังก์ชันอื่นๆ ครบถ้วน
-# =========================================================
 with tabs[2]:
-    st.subheader("🌐 ศูนย์รวมลิงก์เชื่อมโยง (Social & E-Commerce)")
+    st.subheader("🌐 ศูนย์รวมลิงก์เชื่อมโยงโซเชียล")
     col_s1, col_s2, col_s3, col_s4 = st.columns(4)
     with col_s1:
         st.markdown('<div class="social-card"><h3>📘 Facebook</h3><p>ติดตามเพจหลักชุมชน</p><a href="https://www.facebook.com" target="_blank">🔗 ไปที่ Facebook</a></div>', unsafe_allow_html=True)
@@ -191,7 +174,7 @@ with tabs[4]:
         st.info("🏡 **Reel #3:** บ้านเดี่ยวเชียงใหม่")
 
 with tabs[5]:
-    st.subheader("🛒 ตลาดสินค้าตกแต่งบ้าน & ของใช้ (Shopee / Lazada Style)")
+    st.subheader("🛒 ตลาดสินค้าตกแต่งบ้าน (Shopee / Lazada Style)")
     col_p1, col_p2, col_p3 = st.columns(3)
     with col_p1:
         st.markdown('<div class="shopping-card"><h4>🛏️ ชุดเครื่องนอน</h4><p>590 บาท</p><a href="https://shopee.co.th" target="_blank">🛒 สั่งซื้อ</a></div>', unsafe_allow_html=True)
@@ -203,4 +186,23 @@ with tabs[5]:
 with tabs[6]:
     st.subheader("🛡️ ระบบชำระเงินปลอดภัยผ่านคนกลาง (Escrow)")
 with tabs[7]:
-    st.subheader("➕ ล
+    st.subheader("➕ ลงประกาศใหม่ (ระบุพิกัดทั่วไทย)")
+    with st.form("new_listing"):
+        st.text_input("หัวข้อประกาศ")
+        st.selectbox("เลือกจังหวัด", provinces_thailand[1:])
+        st.number_input("ราคา", min_value=0)
+        st.form_submit_button("บันทึก")
+with tabs[8]:
+    st.subheader("🚗 ธุรกรรม & จัดไฟแนนซ์รถยนต์")
+with tabs[9]:
+    st.subheader("🚘 คำนวณค่างวดผ่อนรถ")
+with tabs[10]:
+    st.subheader("🏦 เช็กวงเงินกู้บ้าน")
+with tabs[11]:
+    st.subheader("💳 ชำระเงินค่าบริการแอดมิน")
+with tabs[12]:
+    st.subheader("📞 ติดต่อ / เรื่องร้องเรียน")
+with tabs[13]:
+    st.subheader("⚙️ สำหรับแอดมิน")
+    if st.text_input("รหัสผ่านแอดมิน", type="password") == "1234":
+        st.success("เข้าสู่ระบบแอดมินสำเร็จ")
