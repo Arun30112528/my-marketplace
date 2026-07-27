@@ -174,10 +174,8 @@ elif menu_option.startswith("💳"):
     st.subheader("💳 ชำระเงินค่าบริการแอดมิน / อัปเกรดพรีเมียม")
     st.write("สแกน QR Code พร้อมเพย์ด้านล่างนี้เพื่อโอนเงินเข้าบัญชี")
     
-    # แสดงภาพ QR Code พร้อมเพย์ตามข้อมูลที่ระบุ
     col_q1, col_q2 = st.columns([1, 2])
     with col_q1:
-        # สร้างกล่องจำลองแสดงรายละเอียดบัญชีตามข้อมูลที่ให้มา
         st.markdown("""
         <div style="background-color: #f8f9fa; padding: 15px; border-radius: 10px; border: 1px solid #dee2e6;">
             <h4>📌 รายละเอียดบัญชี</h4>
@@ -187,13 +185,18 @@ elif menu_option.startswith("💳"):
         </div>
         """, unsafe_allow_html=True)
     with col_q2:
-        # ตรวจสอบว่ามีไฟล์รูป QR Code หรือแสดงข้อความแนะนำวิธีอัปโหลดไฟล์รูป
         if os.path.exists("qr_code.jpg"):
             st.image("qr_code.jpg", caption="สแกน QR Code เพื่อชำระเงิน", width=300)
         elif os.path.exists("qr_code.png"):
             st.image("qr_code.png", caption="สแกน QR Code เพื่อชำระเงิน", width=300)
         else:
-            st.info("💡 หากท่านต้องการแสดงรูป QR Code จริง สามารถอัปโหลดไฟล์ภาพชื่อ `qr_code.jpg` หรือ `qr_code.png` ไว้ใน GitHub โฟลเดอร์เดียวกับ `app.py` ได้เลยครับ หรือสามารถบันทึกสลิปแล้วส่งแจ้งแอดมินได้ที่เมนูถัดไป")
+            st.info("💡 สามารถบันทึกสลิปแล้วส่งแจ้งแอดมินได้ที่เมนูติดต่อ / แจ้งเรื่องร้องเรียน")
 
 elif menu_option.startswith("📞"):
-    st.subheader("📞 ช่องทางติดต่อ & แจ้งเรื่องร้องเรียน / ส่งสลิปโอนเงิ
+    st.subheader("📞 ช่องทางติดต่อ & แจ้งเรื่องร้องเรียน / ส่งสลิปโอนเงิน")
+    with st.form("f_con", clear_on_submit=True):
+        c_name = st.text_input("ชื่อ-นามสกุล")
+        c_tel = st.text_input("เบอร์โทรศัพท์")
+        c_msg = st.text_area("ข้อความ / แจ้งปัญหา / แนบแจ้งหลักฐานการโอนเงิน (สลิป)")
+        if st.form_submit_button("📩 ส่งข้อมูล"):
+            if c_name and c_t
