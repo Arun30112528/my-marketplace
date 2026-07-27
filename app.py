@@ -53,7 +53,6 @@ provinces_thailand = [
     "ชลบุรี", "ระยอง", "ภูเก็ต", "สงขลา", "สุราษฎร์ธานี", "พระนครศรีอยุธยา"
 ]
 
-# สร้าง Selectbox สำหรับเลือกเมนูหลักแทนแท็บ เพื่อแก้ปัญหาหน้าว่างหรือแท็บหลุดหาย
 menu_option = st.selectbox("📌 เลือกเมนูการใช้งานหลัก:", [
     "📰 1. ฟีดไทม์ไลน์",
     "🏠 2. ค้นหาบ้านเช่า",
@@ -73,7 +72,6 @@ menu_option = st.selectbox("📌 เลือกเมนูการใช้�
 
 st.divider()
 
-# แสดงผลตามเมนูที่เลือก
 if menu_option.startswith("📰"):
     st.subheader("📰 ฟีดไทม์ไลน์ชุมชนออนไลน์")
     with st.form("f_post", clear_on_submit=True):
@@ -174,29 +172,28 @@ elif menu_option.startswith("🏦"):
 
 elif menu_option.startswith("💳"):
     st.subheader("💳 ชำระเงินค่าบริการแอดมิน / อัปเกรดพรีเมียม")
-    st.info("🎯 **พร้อมเพย์:** 0XX-XXX-XXXX (ชื่อบัญชี: ศูนย์กลางมาร์เก็ตเพลส)")
+    st.write("สแกน QR Code พร้อมเพย์ด้านล่างนี้เพื่อโอนเงินเข้าบัญชี")
+    
+    # แสดงภาพ QR Code พร้อมเพย์ตามข้อมูลที่ระบุ
+    col_q1, col_q2 = st.columns([1, 2])
+    with col_q1:
+        # สร้างกล่องจำลองแสดงรายละเอียดบัญชีตามข้อมูลที่ให้มา
+        st.markdown("""
+        <div style="background-color: #f8f9fa; padding: 15px; border-radius: 10px; border: 1px solid #dee2e6;">
+            <h4>📌 รายละเอียดบัญชี</h4>
+            <p><strong>ธนาคาร:</strong> กสิกรไทย (K+)<br>
+            <strong>ชื่อบัญชี:</strong> นาย อรัญ ไชยทิพย์<br>
+            <strong>พร้อมเพย์ / เลขที่:</strong> xxx-x-x1601-x</p>
+        </div>
+        """, unsafe_allow_html=True)
+    with col_q2:
+        # ตรวจสอบว่ามีไฟล์รูป QR Code หรือแสดงข้อความแนะนำวิธีอัปโหลดไฟล์รูป
+        if os.path.exists("qr_code.jpg"):
+            st.image("qr_code.jpg", caption="สแกน QR Code เพื่อชำระเงิน", width=300)
+        elif os.path.exists("qr_code.png"):
+            st.image("qr_code.png", caption="สแกน QR Code เพื่อชำระเงิน", width=300)
+        else:
+            st.info("💡 หากท่านต้องการแสดงรูป QR Code จริง สามารถอัปโหลดไฟล์ภาพชื่อ `qr_code.jpg` หรือ `qr_code.png` ไว้ใน GitHub โฟลเดอร์เดียวกับ `app.py` ได้เลยครับ หรือสามารถบันทึกสลิปแล้วส่งแจ้งแอดมินได้ที่เมนูถัดไป")
 
 elif menu_option.startswith("📞"):
-    st.subheader("📞 ช่องทางติดต่อ & แจ้งเรื่องร้องเรียน")
-    with st.form("f_con", clear_on_submit=True):
-        c_name = st.text_input("ชื่อ-นามสกุล")
-        c_tel = st.text_input("เบอร์โทรศัพท์")
-        c_msg = st.text_area("ข้อความ / แจ้งปัญหา / แนบสลิป")
-        if st.form_submit_button("📩 ส่งข้อความ"):
-            if c_name and c_tel and c_msg:
-                st.session_state.contacts.append({"name": c_name, "tel": c_tel, "msg": c_msg})
-                st.success("🎉 ส่งข้อความสำเร็จ!")
-            else:
-                st.warning("⚠️ กรุณากรอกข้อมูลให้ครบ")
-
-elif menu_option.startswith("⚙️"):
-    st.subheader("⚙️ ระบบจัดการสำหรับแอดมิน")
-    apw = st.text_input("กรอกรหัสผ่านแอดมิน:", type="password")
-    if apw == "1234":
-        st.success("🔓 เข้าสู่ระบบสำเร็จ!")
-        st.metric("จำนวนโพสต์ไทม์ไลน์", len(st.session_state.timeline_posts))
-        st.metric("จำนวนประกาศอสังหาฯ", len(st.session_state.listings))
-        st.metric("คำขอไฟแนนซ์", len(st.session_state.finance_requests))
-        st.metric("ข้อความติดต่อ", len(st.session_state.contacts))
-    elif apw:
-        st.error("❌ รหัสผ่านไม่ถูกต้อง
+    st.subheader("📞 ช่องทางติดต่อ & แจ้งเรื่องร้องเรียน / ส่งสลิปโอนเงิ
