@@ -1,205 +1,205 @@
 import streamlit as st
 import os
 
-st.set_page_config(page_title="my-marketplace | ศูนย์กลางอสังหาฯ & นายหน้ามืออาชีพ", page_icon="🏡", layout="wide")
+# ตั้งค่าหน้าตาของเว็บ
+st.set_page_config(page_title="ศูนย์กลางลงประกาศบ้าน อสังหาฯ & รถยนต์มือสอง", page_icon="🏠", layout="wide")
 
-# ตกแต่ง CSS หน้าจอให้ทันสมัยสไตล์ Facebook / YouTube และระบบนายหน้า
-st.markdown("""
-    <style>
-    .fb-header {
-        background: linear-gradient(135deg, #1877f2 0%, #0c4a9e 100%);
-        padding: 25px;
-        border-radius: 12px;
-        color: white;
-        margin-bottom: 20px;
-    }
-    .card-post {
-        background-color: #ffffff;
-        border: 1px solid #ced4da;
-        padding: 20px;
-        border-radius: 10px;
-        margin-bottom: 15px;
-        box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-    }
-    .wallet-box {
-        background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
-        padding: 20px;
-        border-radius: 12px;
-        color: white;
-        margin-bottom: 20px;
-    }
-    </style>
-""", unsafe_allow_html=True)
+# ---------------------------------------------------------
+# 🎨 ส่วนที่ 0: Header & โลโก้เว็บไซต์
+# ---------------------------------------------------------
+col_logo, col_header = st.columns([1, 5])
 
-st.markdown("""
-    <div class="fb-header">
-        <h1>🏡 my-marketplace - ศูนย์รวมอสังหาฯ & ระบบนายหน้าอัจฉริยะ</h1>
-        <p>ฟีดไทม์ไลน์สไตล์โซเชียล, ระบบฝากขาย/หาบ้าน, คำนวณคอมมิชชั่นแบบ Lalamove/Shopee และระบบจัดการแอดมิน</p>
-    </div>
-""", unsafe_allow_html=True)
+with col_logo:
+    if os.path.exists("logo.png"):
+        st.image("logo.png", width=120)
+    elif os.path.exists("logo.jpg"):
+        st.image("logo.jpg", width=120)
+    else:
+        st.title("🏠")
 
-# ฐานข้อมูลจำลอง (Session State)
-if "timeline_feed" not in st.session_state:
-    st.session_state.timeline_feed = [
-        {"user": "คุณอรัญ (Fresh Food Manager & นายหน้าอสังหาฯ)", "time": "10 นาทีที่แล้ว", "text": "🏡 เปิดรับฝากขายบ้านมือสองและหาบ้านเช่าโซนปทุมธานีแล้วครับ ค่าคอมมิชชั่นเป็นธรรม ระบบหักอัตโนมัติปลอดภัย 100% สนใจทักมาได้เลย!", "type": "text", "media": ""}
-    ]
+with col_header:
+    st.title("ศูนย์กลางลงประกาศบ้าน อสังหาฯ & รถยนต์มือสอง")
+    st.write("ซื้อ-ขายบ้าน คอนโด รถยนต์มือสอง ปลอดภัยด้วยระบบชำระเงินคนกลาง (Escrow) และ Verified Seller")
 
-if "property_listings" not in st.session_state:
-    st.session_state.property_listings = [
-        {"name": "คุณสมชาย ใจดี", "tel": "081-234-5678", "type": "ฝากขายบ้านมือสอง", "title": "บ้านเดี่ยว 2 ชั้น ทำเลดี ปทุมธานี", "price": 2500000, "commission_rate": 3.0}
-    ]
+# ---------------------------------------------------------
+# 📢 ส่วนที่ 1: แบนเนอร์สปอนเซอร์ & สัญลักษณ์ความปลอดภัย
+# ---------------------------------------------------------
+st.markdown("---")
+col_banner1, col_banner2 = st.columns([3, 1])
 
-if "wallet_transactions" not in st.session_state:
-    st.session_state.wallet_transactions = [
-        {"id": "TXN-001", "desc": "ค่าคอมมิชชั่นขายบ้าน (คุณสมชาย)", "total": 2500000, "rate": 3.0, "commission": 75000, "net": 2425000, "status": "หักสำเร็จ & โอนเข้ากระเป๋าแล้ว"}
-    ]
+with col_banner1:
+    if os.path.exists("banner.jpg") or os.path.exists("banner.png"):
+        banner_file = "banner.jpg" if os.path.exists("banner.jpg") else "banner.png"
+        st.image(banner_file, use_column_width=True)
+    else:
+        st.info("📢 **พื้นที่สำหรับติดแบนเนอร์โฆษณา** (สนใจลงโฆษณาเต็นท์รถ/นายหน้า ติดต่อแอดมิน โทร/LINE: 08X-XXX-XXXX)")
 
-if "support_tickets" not in st.session_state:
-    st.session_state.support_tickets = []
+with col_banner2:
+    st.success("🛡️ **ปลอดภัย 100%**\n\nผู้ขายผ่านการยืนยันตัวตน (Verified Seller) + ระบบชำระเงินผ่านคนกลาง Escrow")
 
-provinces_thailand = [
-    "กรุงเทพมหานคร", "ปทุมธานี", "นนทบุรี", "สมุทรปราการ", "สมุทรสาคร", "นครปฐม",
-    "เชียงใหม่", "เชียงราย", "ขอนแก่น", "นครราชสีมา", "อุบลราชธานี", "อุดรธานี",
-    "ชลบุรี", "ระยอง", "ภูเก็ต", "สงขลา", "สุราษฎร์ธานี", "พระนครศรีอยุธยา"
-]
+st.markdown("---")
 
-# เมนูหลัก 6 ฟีเจอร์ตรงตามความต้องการ
-menu_option = st.selectbox("📌 เลือกเมนูการใช้งานหลัก:", [
-    "📰 5. หน้าจอ Timeline ทันสมัย (Facebook & YouTube Style)",
-    "🏡 1. โปรแกรมรับฝากขายบ้านมือสองและหาบ้านเช่า",
-    "💰 6. บัญชีหักค่านายหน้า & กระเป๋าเงินอัจฉริยะ (Lalamove/Shopee Style)",
-    "🏦 3. โปรแกรมคำนวณวงเงินกู้ซื้อบ้าน",
-    "📞 4. โปรแกรมแอดมินแจ้งปัญหา & ศูนย์ช่วยเหลือ",
-    "⚙️ ระบบจัดการหลังบ้าน (Admin)"
+# ---------------------------------------------------------
+# 📌 ส่วนที่ 2: เมนูหลักของเว็บไซต์
+# ---------------------------------------------------------
+tabs = st.tabs([
+    "🔍 ค้นหาประกาศทั้งหมด", 
+    "🛡️ ชำระเงินผ่านระบบกลาง (Escrow)",
+    "➕ ลงประกาศใหม่ (ฟรี)", 
+    "🚗 ธุรกรรม & จัดไฟแนนซ์รถยนต์",
+    "🚘 คำนวณค่างวดผ่อนรถ",
+    "🏦 เช็กวงเงินกู้บ้าน",
+    "🎁 กิจกรรม & ส่วนลด",
+    "🔴 ไลฟ์สดขายสินค้า (Live)",
+    "💳 ชำระเงินค่าบริการแอดมิน", 
+    "📞 ติดต่อ / เรื่องร้องเรียน",
+    "⚙️ สำหรับแอดมิน"
 ])
 
-st.divider()
+# =========================================================
+# TAB 1: ค้นหาประกาศทั้งหมด
+# =========================================================
+with tabs[0]:
+    st.subheader("🔍 ค้นหาบ้าน คอนโด รถยนต์ และสินค้ามือสอง")
+    
+    with st.expander("🎯 ตัวกรองการค้นหาขั้นสูง (คลิกเพื่อเปิด/ปิด)", expanded=True):
+        col_f1, col_f2, col_f3, col_f4 = st.columns(4)
+        with col_f1:
+            search_kw = st.text_input("คีย์เวิร์ดค้นหา (เช่น Nissan, คอนโด, ปทุมธานี)")
+        with col_f2:
+            search_cat = st.selectbox("หมวดหมู่สินค้า", ["ทั้งหมด", "🚗 รถยนต์มือสอง", "🏠 อสังหาริมทรัพย์", "📦 สินค้าทั่วไป"])
+        with col_f3:
+            search_price = st.selectbox("ช่วงราคา", ["ทั้งหมด", "ต่ำกว่า 100,000 บาท", "100,000 - 500,000 บาท", "500,000 - 2,000,000 บาท", "2,000,000 บาทขึ้นไป"])
+        with col_f4:
+            search_province = st.selectbox("จังหวัด/พื้นที่", ["ทั้งหมด", "ปทุมธานี", "กรุงเทพฯ และปริมณฑล", "ต่างจังหวัด"])
 
-# -------------------------------------------------------------
-# 1. หน้าจอ Timeline (Facebook & YouTube Style)
-# -------------------------------------------------------------
-if menu_option.startswith("📰"):
-    st.subheader("📰 ฟีดไทม์ไลน์ชุมชนอสังหาฯ (Social Feed)")
+    st.divider()
+    st.subheader("📌 ประกาศแนะนำ / ประกาศล่าสุด")
     
-    with st.form("form_post_feed", clear_on_submit=True):
-        st.markdown("### ✍️ สร้างโพสต์ใหม่ของคุณ (แชร์บ้าน, วิดีโอ YouTube, หรือประกาศด่วน)")
-        p_user = st.text_input("ชื่อของคุณ / ตำแหน่ง (เช่น คุณอรัญ นายหน้าอสังหาฯ)")
-        p_text = st.text_area("คุณกำลังคิดอะไรอยู่ หรือมีบ้านมือสอง/บ้านเช่าตัวไหนมานำเสนอ?")
-        p_media_type = st.selectbox("ประเภทสื่อที่แนบ", ["ข้อความปกติ", "แนบลิงก์วิดีโอ YouTube", "แนบรูปภาพอสังหาฯ"])
-        p_link = st.text_input("วางลิงก์ YouTube (ถ้ามี เช่น https://www.youtube.com/watch?v=...) หรือลิงก์รูปภาพ")
-        
-        if st.form_submit_button("🚀 โพสต์ลงฟีดทันที"):
-            if p_user and p_text:
-                st.session_state.timeline_feed.insert(0, {
-                    "user": p_user, "time": "เมื่อสักครู่นี้", "text": p_text, "type": p_media_type, "media": p_link
-                })
-                st.success("🎉 โพสต์ลงไทม์ไลน์สำเร็จ!")
-            else:
-                st.warning("⚠️ กรุณากรอกชื่อและข้อความโพสต์")
-                
-    st.markdown("### 🌐 ฟีดโพสต์ล่าสุดจากสมาชิก")
-    for post in st.session_state.timeline_feed:
-        st.markdown(f"""
-        <div class="card-post">
-            <strong>👤 {post['user']}</strong> <span style="color:gray; font-size:12px;">{post['time']}</span>
-            <p style="margin-top:10px; font-size:15px;">{post['text']}</p>
-        </div>
-        """, unsafe_allow_html=True)
-        if post['type'] == "แนบลิงก์วิดีโอ YouTube" and post['media']:
-            try:
-                st.video(post['media'])
-            except:
-                st.info(f"🔗 ลิงก์วิดีโอ: {post['media']}")
-        elif post['type'] == "แนบรูปภาพอสังหาฯ" and post['media']:
-            st.image(post['media'], width=400)
-
-# -------------------------------------------------------------
-# 2. โปรแกรมรับฝากขายบ้านมือสองและหาบ้านเช่า + คำนวณคอมมิชชั่น
-# -------------------------------------------------------------
-elif menu_option.startswith("🏡"):
-    st.subheader("🏡 โปรแกรมรับฝากขายบ้านมือสองและหาบ้านเช่า")
-    
-    tab1, tab2 = st.tabs(["📝 ลงทะเบียนฝากทรัพย์ / หาบ้าน", "📋 รายการทรัพย์สินในระบบ"])
-    
-    with tab1:
-        with st.form("form_property", clear_on_submit=True):
-            c_name = st.text_input("ชื่อ-นามสกุลผู้ติดต่อ")
-            c_tel = st.text_input("เบอร์โทรศัพท์มือถือ")
-            c_action = st.selectbox("ประเภทบริการ", ["ฝากขายบ้านมือสอง", "ฝากปล่อยเช่าบ้าน", "ต้องการหาบ้านเช่า", "ต้องการซื้อบ้านมือสอง"])
-            c_title = st.text_input("หัวข้อประกาศ (เช่น ขายบ้านเดี่ยว 2 ชั้น ทำเลปทุมธานี)")
-            c_price = st.number_input("ราคาประเมินขาย / ค่าเช่าต่อเดือน (บาท)", min_value=1000, value=2500000, step=10000)
-            c_comm_rate = st.slider("กำหนดค่าคอมมิชชั่นนายหน้า (%)", min_value=1.0, max_value=5.0, value=3.0, step=0.5)
-            c_detail = st.text_area("รายละเอียดเพิ่มเติม / ทำเล / สิ่งอำนวยความสะดวก")
+    # ตัวอย่างประกาศที่ 1 (รถยนต์)
+    with st.container():
+        col_img1, col_detail1 = st.columns([1, 2])
+        with col_img1:
+            st.image("https://via.placeholder.com/400x250.png?text=Nissan+Almera+2014", caption="Nissan Almera 1.2 E ปี 2014", use_column_width=True)
+        with col_detail1:
+            st.markdown("### 🚗 **Nissan Almera 1.2 E ปี 2014 (เกียร์ออโต้)**")
+            st.markdown("**ราคา: 189,000 บาท** (ฟรีดาวน์ / ผ่อนประมาณ 3,xxx บาท/เดือน)")
+            st.write("สภาพดีพร้อมใช้งาน เครื่องยนต์ดีเยี่ยม รถบ้านมือเดียว เลขไมล์น้อย ตรวจเช็กเล่มทะเบียนเรียบร้อยแล้ว")
+            st.caption("📍 พิกัด: อ.เมือง จ.ปทุมธานี | ผู้ขาย: คุณอรัญ (นายหน้า Verified)")
             
-            if st.form_submit_button("💾 บันทึกข้อมูลเข้าระบบ"):
-                if c_name and c_tel and c_title:
-                    # คำนวณคอมมิชชั่นอัตโนมัติ
-                    calc_comm = (c_price * c_comm_rate) / 100
-                    calc_net = c_price - calc_comm
-                    
-                    st.session_state.property_listings.insert(0, {
-                        "name": c_name, "tel": c_tel, "type": c_action, "title": c_title, "price": c_price, "commission_rate": c_comm_rate
-                    })
-                    
-                    # บันทึกลงระบบกระเป๋าเงินอัตโนมัติ
-                    txn_id = f"TXN-{len(st.session_state.wallet_transactions)+1:03d}"
-                    st.session_state.wallet_transactions.insert(0, {
-                        "id": txn_id, "desc": f"{c_action} ({c_title})", "total": c_price, "rate": c_comm_rate, "commission": calc_comm, "net": calc_net, "status": "บันทึกคำขอสำเร็จ"
-                    })
-                    
-                    st.success(f"🎉 บันทึกสำเร็จ! ระบบคำนวณค่าคอมมิชชั่น {c_comm_rate}% เป็นเงิน {calc_comm:,.2f} บาท เรียบร้อยแล้ว")
-                else:
-                    st.warning("⚠️ กรุณากรอกข้อมูลสำคัญให้ครบถ้วน")
-                    
-    with tab2:
-        st.markdown("### 📋 รายการอสังหาริมทรัพย์ทั้งหมดในระบบ")
-        for prop in st.session_state.property_listings:
-            st.markdown(f"""
-            <div class="card-post">
-                <h4>🏷️ {prop['title']}</h4>
-                <p><strong>ผู้ติดต่อ:</strong> {prop['name']} ({prop['tel']}) | <strong>ประเภท:</strong> {prop['type']}</p>
-                <p><strong>ราคา:</strong> {prop['price']:,.2f} บาท | <strong>ค่าคอมมิชชั่นนายหน้า:</strong> {prop['commission_rate']}%</p>
-            </div>
-            """, unsafe_allow_html=True)
+            col_act1, col_act2, col_act3 = st.columns(3)
+            col_act1.button("📞 โทรหาผู้ขายด่วน", key="call1")
+            col_act2.button("💬 ทัก LINE ผู้ขาย", key="line1")
+            col_act3.button("🛡️ ซื้อผ่านระบบคนกลาง", key="escrow1")
 
-# -------------------------------------------------------------
-# 3. บัญชีหักค่านายหน้า & กระเป๋าเงินอัจฉริยะ (Lalamove/Shopee Style)
-# -------------------------------------------------------------
-elif menu_option.startswith("💰"):
-    st.subheader("💰 บัญชีหักค่านายหน้า & กระเป๋าเงินอัจฉริยะ (Wallet System)")
-    st.markdown("""
-    <div class="wallet-box">
-        <h3>💳 ระบบกระเป๋าเงินนายหน้า (Agent Wallet)</h3>
-        <p>ระบบหักค่านายหน้าและจัดการรายรับอัตโนมัติ คล้ายกับระบบขนส่ง Lalamove หรือแพลตฟอร์มสั่งอาหาร Shopee</p>
-    </div>
-    """, unsafe_allow_html=True)
+    st.divider()
+
+    # ตัวอย่างประกาศที่ 2 (บ้าน)
+    with st.container():
+        col_img2, col_detail2 = st.columns([1, 2])
+        with col_img2:
+            st.image("https://via.placeholder.com/400x250.png?text=Townhome+Pathumthani", caption="ทาวน์โฮม 2 ชั้น ปทุมธานี", use_column_width=True)
+        with col_detail2:
+            st.markdown("### 🏠 **ขายทาวน์โฮม 2 ชั้น 3 ห้องนอน 2 ห้องน้ำ ใกล้โลตัสปทุมธานี**")
+            st.markdown("**ราคา: 1,950,000 บาท** (กู้ได้เต็ม 100%)")
+            st.write("เนื้อที่ 20 ตร.วา ต่อเติมครัวไทยและโรงจอดรถเรียบร้อย ทำเลดีเดินทางสะดวก ใกล้ตลาดและสถานศึกษา")
+            st.caption("📍 พิกัด: อ.เมือง จ.ปทุมธานี | ผู้ขาย: คุณอรัญ")
+            
+            col_act4, col_act5, col_act6 = st.columns(3)
+            col_act4.button("📞 โทรหาผู้ขายด่วน", key="call2")
+            col_act5.button("💬 ทัก LINE ผู้ขาย", key="line2")
+            col_act6.button("🏦 เช็กวงเงินกู้บ้านนี้", key="loan2")
+
+# =========================================================
+# TAB 2: ระบบชำระเงินผ่านคนกลาง (Escrow)
+# =========================================================
+with tabs[1]:
+    st.subheader("🛡️ ระบบชำระเงินปลอดภัยผ่านคนกลาง (Escrow Payment System)")
+    st.write("ซื้อขายมั่นใจ 100% ระบบจะกักเงินไว้จนกว่าผู้ซื้อจะได้รับสินค้าถูกต้อง จึงจะโอนเงินให้ผู้ขาย")
     
-    total_revenue = sum([item['total'] for item in st.session_state.wallet_transactions])
-    total_commission = sum([item['commission'] for item in st.session_state.wallet_transactions])
-    
-    col1, col2 = st.columns(2)
-    with col1:
-        st.metric(label="📊 มูลค่าซื้อ-ขายรวมในระบบ", value=f"{total_revenue:,.2f} บาท")
-    with col2:
-        st.metric(label="💵 รายได้ค่าคอมมิชชั่นสะสม (สุทธิ)", value=f"{total_commission:,.2f} บาท")
+    col_esc1, col_esc2 = st.columns([1, 1])
+    with col_esc1:
+        st.markdown("#### 1️⃣ กรอกรายการสั่งซื้อ & โอนเงินเข้าคนกลาง")
+        with st.form("escrow_buy_form"):
+            order_item = st.text_input("ชื่อสินค้า / รหัสทรัพย์ที่ต้องการซื้อ")
+            seller_name = st.text_input("ชื่อผู้ขาย / ชื่อร้านค้า")
+            item_price = st.number_input("ราคาสินค้า (บาท)", min_value=100, step=100)
+            buyer_name = st.text_input("ชื่อ-นามสกุล ผู้ซื้อ")
+            buyer_tel = st.text_input("เบอร์โทรศัพท์ผู้ซื้อ")
+            
+            submit_buy = st.form_submit_button("💳 สร้างรายการชำระเงินคนกลาง")
+            if submit_buy:
+                st.success(f"🎉 สร้างคำสั่งซื้อเรียบร้อย! กรุณาสแกนจ่ายเงินจำนวน {item_price:,.2f} บาท เข้าบัญชีคนกลางด้านขวา")
+
+    with col_esc2:
+        st.markdown("#### 2️⃣ สแกนโอนเงินเข้าบัญชีกลางระบบ")
+        if os.path.exists("qr_code.jpg"):
+            st.image("qr_code.jpg", caption="สแกนโอนเงินชำระเข้าบัญชีคนกลาง (ระบบพักเงินไว้ปลอดภัย)", width=260)
+        elif os.path.exists("qr_code.png"):
+            st.image("qr_code.png", caption="สแกนโอนเงินชำระเข้าบัญชีคนกลาง (ระบบพักเงินไว้ปลอดภัย)", width=260)
+            
+        st.divider()
+        st.markdown("#### 3️⃣ สถานะคำสั่งซื้อ & กดยืนยันรับของ")
+        st.info("📌 **สถานะปัจจุบัน:** รอผู้ซื้อโอนเงิน ➔ รอผู้ขายจัดส่ง ➔ **[กดปุ่มด้านล่างเมื่อได้รับของแล้ว]**")
         
-    st.markdown("### 📜 ประวัติการหักค่านายหน้าและธุรกรรมล่าสุด")
-    for txn in st.session_state.wallet_transactions:
-        st.markdown(f"""
-        <div class="card-post">
-            <strong>รหัสรายการ: {txn['id']}</strong> | <span style="color:green;">{txn['status']}</span>
-            <p><strong>รายการ:</strong> {txn['desc']}</p>
-            <p><strong>มูลค่าทรัพย์:</strong> {txn['total']:,.2f} บาท (หักค่าคอมมิชชั่น {txn['rate']}%)</p>
-            <p><strong>ค่าคอมมิชชั่นที่หักเข้ากระเป๋า:</strong> <span style="color:#28a745; font-weight:bold;">+{txn['commission']:,.2f} บาท</span></p>
-        </div>
-        """, unsafe_allow_html=True)
+        if st.button("✅ กดยืนยัน 'ได้รับสินค้าถูกต้อง' (เพื่อปล่อยเงินให้ผู้ขาย)"):
+            st.balloons()
+            st.success("🎉 ยืนยันสำเร็จ! ระบบได้ทำการโอนเงินตรงเข้าบัญชีผู้ขายเรียบร้อยแล้ว ขอบคุณที่ใช้บริการครับ")
 
-# -------------------------------------------------------------
-# 4. โปรแกรมคำนวณวงเงินกู้ซื้อบ้าน
-# -------------------------------------------------------------
-elif menu_option.startswith("🏦"):
-    st.subheader("🏦 โปรแกรมคำนวณวงเงินกู้ซื้อบ้าน & ค่างวดผ่อน")
+# =========================================================
+# TAB 3: ลงประกาศใหม่
+# =========================================================
+with tabs[2]:
+    st.subheader("กรอกข้อมูลลงประกาศ (ฟรี 100%)")
+    category = st.selectbox("เลือกหมวดหมู่ที่ต้องการลงประกาศ", ["🚗 รถยนต์มือสอง / ยานพาหนะ", "🏠 อสังหาริมทรัพย์ (บ้าน/คอนโด/ที่ดิน)", "📦 สินค้าทั่วไปมือสอง"])
     
-    sal = st.number_input("รายได้สุทธิต่อเดือน (บาท)", min_value=10000, value=35000, step=1000)
-    deb = st.number_input("ภาระหนี้สินเดิมต่อเดือน (บาท)", min_value=0, value=0, step=500)
-    interest_rate 
+    with st.form("listing_form"):
+        title = st.text_input("หัวข้อประกาศ (เช่น ขาย Nissan Almera ปี 2014 / ขายบ้านเดี่ยว 2 ชั้น)")
+        if "รถยนต์" in category:
+            col_car1, col_car2, col_car3 = st.columns(3)
+            with col_car1:
+                car_brand = st.text_input("ยี่ห้อ / รุ่น (เช่น Nissan Almera, Toyota Vios)")
+            with col_car2:
+                car_year = st.number_input("ปี ค.ศ. (เช่น 2014)", min_value=1990, max_value=2026, value=2014)
+            with col_car3:
+                car_mileage = st.number_input("ระยะทางวิ่ง / เลขไมล์ (กม.)", min_value=0, step=5000)
+            car_gear = st.radio("ระบบเกียร์", ["เกียร์ออโต้ (AT)", "เกียร์ธรรมดา (MT)"], horizontal=True)
+
+        price_item = st.number_input("ราคาขาย (บาท)", min_value=0, step=1000)
+        details = st.text_area("รายละเอียดเพิ่มเติม / สภาพสินค้า")
+        contact_name = st.text_input("ชื่อผู้ติดต่อ")
+        phone = st.text_input("เบอร์โทรศัพท์ / LINE ID")
+        
+        submitted = st.form_submit_button("ส่งข้อมูลลงประกาศ")
+        if submitted:
+            st.success("🎉 บันทึกข้อมูลประกาศเรียบร้อยแล้ว!")
+
+# =========================================================
+# TAB 4: ธุรกรรม & จัดไฟแนนซ์รถยนต์
+# =========================================================
+with tabs[3]:
+    st.subheader("🚗 บริการธุรกรรมทางการเงินสำหรับรถยนต์มือสองครบวงจร")
+    col_fin1, col_fin2 = st.columns([1, 1])
+    with col_fin1:
+        st.markdown("""
+        #### 📋 บริการของเรา:
+        * 🔑 **จัดไฟแนนซ์รถมือสอง:** ผ่อนสบายสูงสุด 84 เดือน ไม่ต้องมีผู้ค้ำประกัน
+        * 🔄 **รีไฟแนนซ์ / ปิดบัญชี:** ย้ายไฟแนนซ์เดิม ลดดอกเบี้ย ดึงเงินสดออกมาใช้
+        * 📑 **จำนำเล่มทะเบียน:** มีรถใช้ มีเงินใช้อนุมัติไวภายใน 1 วัน
+        """)
+        st.success("✅ ประเมินยอดจัดฟรี! บริการเซ็นสัญญาถึงบ้านทั่วประเทศ")
+
+    with col_fin2:
+        with st.form("car_finance_form"):
+            fin_type = st.selectbox("เลือกบริการที่ต้องการ", ["จัดไฟแนนซ์ซื้อรถมือสอง", "รีไฟแนนซ์ / ย้ายไฟแนนซ์", "จำนำเล่มทะเบียน (ยืมเงินสด)", "ประเมินราคากลางรถยนต์"])
+            car_info = st.text_input("ยี่ห้อ / รุ่น / ปีรถ (เช่น Nissan Almera ปี 2014)")
+            request_amount = st.number_input("วงเงินที่ต้องการกู้ (บาท)", min_value=10000, step=10000)
+            user_name = st.text_input("ชื่อ-นามสกุล ผู้ขอปรึกษา")
+            user_tel = st.text_input("เบอร์โทรศัพท์ติดต่อกลับ")
+            submit_fin = st.form_submit_button("📩 ยื่นเรื่องขอประเมินวงเงินฟรี")
+            if submit_fin:
+                st.success("🎉 ยื่นข้อมูลเรียบร้อยแล้ว! เจ้าหน้าที่ฝ่ายสินเชื่อจะติดต่อกลับโดยด่วนครับ")
+
+# =========================================================
+# TAB 5: คำนวณค่างวดผ่อนรถ
+# ===================================
