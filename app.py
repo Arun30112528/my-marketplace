@@ -1,12 +1,8 @@
 import streamlit as st
 import os
 
-# ตั้งค่าหน้าตาของเว็บ
 st.set_page_config(page_title="ศูนย์กลางลงประกาศบ้าน อสังหาฯ & รถยนต์มือสอง", page_icon="🏠", layout="wide")
 
-# ---------------------------------------------------------
-# 🎨 ส่วนที่ 0: Header & โลโก้เว็บไซต์
-# ---------------------------------------------------------
 col_logo, col_header = st.columns([1, 5])
 
 with col_logo:
@@ -21,9 +17,6 @@ with col_header:
     st.title("ศูนย์กลางลงประกาศบ้าน อสังหาฯ & รถยนต์มือสอง")
     st.write("ซื้อ-ขายบ้าน คอนโด รถยนต์มือสอง ปลอดภัยด้วยระบบชำระเงินคนกลาง (Escrow) และ Verified Seller")
 
-# ---------------------------------------------------------
-# 📢 ส่วนที่ 1: แบนเนอร์สปอนเซอร์ & สัญลักษณ์ความปลอดภัย
-# ---------------------------------------------------------
 st.markdown("---")
 col_banner1, col_banner2 = st.columns([3, 1])
 
@@ -32,16 +25,13 @@ with col_banner1:
         banner_file = "banner.jpg" if os.path.exists("banner.jpg") else "banner.png"
         st.image(banner_file, use_column_width=True)
     else:
-        st.info("📢 **พื้นที่สำหรับติดแบนเนอร์โฆษณา** (สนใจลงโฆษณาเต็นท์รถ/นายหน้า ติดต่อแอดมิน โทร/LINE: 08X-XXX-XXXX)")
+        st.info("📢 พื้นที่สำหรับติดแบนเนอร์โฆษณา")
 
 with col_banner2:
-    st.success("🛡️ **ปลอดภัย 100%**\n\nผู้ขายผ่านการยืนยันตัวตน (Verified Seller) + ระบบชำระเงินผ่านคนกลาง Escrow")
+    st.success("🛡️ ปลอดภัย 100%\n\nผู้ขายผ่านการยืนยันตัวตน + ระบบ Escrow")
 
 st.markdown("---")
 
-# ---------------------------------------------------------
-# 📌 ส่วนที่ 2: เมนูหลักของเว็บไซต์
-# ---------------------------------------------------------
 tabs = st.tabs([
     "🔍 ค้นหาประกาศทั้งหมด", 
     "🛡️ ชำระเงินผ่านระบบกลาง (Escrow)",
@@ -56,13 +46,9 @@ tabs = st.tabs([
     "⚙️ สำหรับแอดมิน"
 ])
 
-# =========================================================
-# TAB 1: ค้นหาประกาศทั้งหมด (Mock Data Engine)
-# =========================================================
 with tabs[0]:
     st.subheader("🔍 ค้นหาบ้าน คอนโด รถยนต์ และสินค้ามือสอง")
     
-    # ฐานข้อมูลจำลอง (Mock Data Database)
     mock_listings = [
         {
             "id": 1,
@@ -126,11 +112,10 @@ with tabs[0]:
         }
     ]
 
-    # --- แถบตัวกรองการค้นหา (Search Filter) ---
-    with st.expander("🎯 ตัวกรองการค้นหาขั้นสูง (คลิกเพื่อเปิด/ปิด)", expanded=True):
+    with st.expander("🎯 ตัวกรองการค้นหาขั้นสูง", expanded=True):
         col_f1, col_f2, col_f3, col_f4 = st.columns(4)
         with col_f1:
-            search_kw = st.text_input("คีย์เวิร์ดค้นหา (เช่น Toyota, บ้าน, คอนโด)").strip().lower()
+            search_kw = st.text_input("คีย์เวิร์ดค้นหา").strip().lower()
         with col_f2:
             search_cat = st.selectbox("หมวดหมู่สินค้า", ["ทั้งหมด", "🚗 รถยนต์มือสอง", "🏠 อสังหาริมทรัพย์", "📦 สินค้าทั่วไป"])
         with col_f3:
@@ -138,24 +123,15 @@ with tabs[0]:
         with col_f4:
             search_province = st.selectbox("จังหวัด/พื้นที่", ["ทั้งหมด", "ปทุมธานี", "กรุงเทพฯ และปริมณฑล", "ต่างจังหวัด"])
 
-    # ประมวลผลการกรองข้อมูล
     filtered_listings = []
     for item in mock_listings:
         match = True
-        
-        # กรองคีย์เวิร์ด
         if search_kw and (search_kw not in item["title"].lower() and search_kw not in item["details"].lower()):
             match = False
-            
-        # กรองหมวดหมู่
         if search_cat != "ทั้งหมด" and item["category"] != search_cat:
             match = False
-            
-        # กรองจังหวัด
         if search_province != "ทั้งหมด" and item["location"] != search_province:
             match = False
-            
-        # กรองราคา
         if search_price == "ต่ำกว่า 100,000 บาท" and item["price"] >= 100000:
             match = False
         elif search_price == "100,000 - 500,000 บาท" and not (100000 <= item["price"] <= 500000):
@@ -171,55 +147,72 @@ with tabs[0]:
     st.divider()
     st.subheader(f"📌 ผลการค้นหาพบทั้งหมด {len(filtered_listings)} รายการ")
     
-    if len(filtered_listings) == 0:
-        st.warning("⚠️ ไม่พบรายการประกาศที่ตรงกับเงื่อนไขการค้นหา กรุณาลองปรับเปลี่ยนตัวกรองครับ")
-    else:
-        for idx, item in enumerate(filtered_listings):
-            with st.container():
-                col_img, col_detail = st.columns([1, 2])
-                with col_img:
-                    st.image(item["img"], caption=item["title"], use_column_width=True)
-                with col_detail:
-                    v_badge = " ✨ *(Verified Seller)*" if item["verified"] else ""
-                    st.markdown(f"### {item['title']}{v_badge}")
-                    st.markdown(f"**ราคา:** {item['price_text']}")
-                    st.write(item["details"])
-                    st.caption(f"📍 พิกัด: {item['location']} | ผู้ขาย: {item['seller']}")
-                    
-                    col_act1, col_act2, col_act3 = st.columns(3)
-                    col_act1.button("📞 โทรหาผู้ขายด่วน", key=f"call_{idx}")
-                    col_act2.button("💬 ทัก LINE ผู้ขาย", key=f"line_{idx}")
-                    col_act3.button("🛡️ ซื้อผ่านระบบคนกลาง", key=f"escrow_{idx}")
-            st.divider()
+    for idx, item in enumerate(filtered_listings):
+        with st.container():
+            col_img, col_detail = st.columns([1, 2])
+            with col_img:
+                st.image(item["img"], caption=item["title"], use_column_width=True)
+            with col_detail:
+                v_badge = " ✨ (Verified)" if item["verified"] else ""
+                st.markdown(f"### {item['title']}{v_badge}")
+                st.markdown(f"**ราคา:** {item['price_text']}")
+                st.write(item["details"])
+                st.caption(f"📍 พิกัด: {item['location']} | ผู้ขาย: {item['seller']}")
+                
+                col_act1, col_act2, col_act3 = st.columns(3)
+                col_act1.button("📞 โทรด่วน", key=f"call_{idx}")
+                col_act2.button("💬 ทัก LINE", key=f"line_{idx}")
+                col_act3.button("🛡️ ซื้อคนกลาง", key=f"escrow_{idx}")
+        st.divider()
 
-# =========================================================
-# TAB 2: ระบบชำระเงินผ่านคนกลาง (Escrow)
-# =========================================================
 with tabs[1]:
-    st.subheader("🛡️ ระบบชำระเงินปลอดภัยผ่านคนกลาง (Escrow Payment System)")
-    st.write("ซื้อขายมั่นใจ 100% ระบบจะกักเงินไว้จนกว่าผู้ซื้อจะได้รับสินค้าถูกต้อง จึงจะโอนเงินให้ผู้ขาย")
-    
+    st.subheader("🛡️ ระบบชำระเงินปลอดภัยผ่านคนกลาง (Escrow)")
     col_esc1, col_esc2 = st.columns([1, 1])
     with col_esc1:
-        st.markdown("#### 1️⃣ กรอกรายการสั่งซื้อ & โอนเงินเข้าคนกลาง")
         with st.form("escrow_buy_form"):
-            order_item = st.text_input("ชื่อสินค้า / รหัสทรัพย์ที่ต้องการซื้อ")
-            seller_name = st.text_input("ชื่อผู้ขาย / ชื่อร้านค้า")
-            item_price = st.number_input("ราคาสินค้า (บาท)", min_value=100, step=100)
-            buyer_name = st.text_input("ชื่อ-นามสกุล ผู้ซื้อ")
-            buyer_tel = st.text_input("เบอร์โทรศัพท์ผู้ซื้อ")
-            
-            submit_buy = st.form_submit_button("💳 สร้างรายการชำระเงินคนกลาง")
-            if submit_buy:
-                st.success(f"🎉 สร้างคำสั่งซื้อเรียบร้อย! กรุณาสแกนจ่ายเงินจำนวน {item_price:,.2f} บาท เข้าบัญชีคนกลางด้านขวา")
-
+            st.text_input("ชื่อสินค้า")
+            st.text_input("ชื่อผู้ขาย")
+            st.number_input("ราคาสินค้า (บาท)", min_value=100, step=100)
+            st.text_input("ชื่อผู้ซื้อ")
+            st.form_submit_button("💳 สร้างรายการชำระเงิน")
     with col_esc2:
-        st.markdown("#### 2️⃣ สแกนโอนเงินเข้าบัญชีกลางระบบ")
         if os.path.exists("qr_code.jpg"):
-            st.image("qr_code.jpg", caption="สแกนโอนเงินชำระเข้าบัญชีคนกลาง (ระบบพักเงินไว้ปลอดภัย)", width=260)
+            st.image("qr_code.jpg", width=260)
         elif os.path.exists("qr_code.png"):
-            st.image("qr_code.png", caption="สแกนโอนเงินชำระเข้าบัญชีคนกลาง (ระบบพักเงินไว้ปลอดภัย)", width=260)
-            
-        st.divider()
-        st.markdown("#### 3️⃣ สถานะคำสั่งซื้อ & กดยืนยันรับของ")
-        st.info("📌 สถานะปัจจุบัน: รอผู้ซื้อโอนเงิน -> รอผู้ขายจัดส่ง -> [กดปุ่มด้านล่างเมื่อได้รับของแล้ว]"
+            st.image("qr_code.png", width=260)
+        st.info("สถานะ: รอผู้ซื้อโอนเงิน -> รอผู้ขายจัดส่ง")
+        st.button("✅ กดยืนยันได้รับสินค้าแล้ว")
+
+with tabs[2]:
+    st.subheader("➕ ลงประกาศใหม่")
+    with st.form("listing_form"):
+        st.text_input("หัวข้อประกาศ")
+        st.number_input("ราคาขาย", min_value=0)
+        st.text_area("รายละเอียด")
+        st.form_submit_button("ส่งข้อมูลลงประกาศ")
+
+with tabs[3]:
+    st.subheader("🚗 จัดไฟแนนซ์รถยนต์")
+
+with tabs[4]:
+    st.subheader("🚘 คำนวณค่างวดผ่อนรถ")
+
+with tabs[5]:
+    st.subheader("🏦 เช็กวงเงินกู้บ้าน")
+
+with tabs[6]:
+    st.subheader("🎁 กิจกรรม & ส่วนลด")
+
+with tabs[7]:
+    st.subheader("🔴 ไลฟ์สดขายสินค้า")
+
+with tabs[8]:
+    st.subheader("💳 ชำระเงินค่าบริการแอดมิน")
+
+with tabs[9]:
+    st.subheader("📞 ติดต่อ / เรื่องร้องเรียน")
+
+with tabs[10]:
+    st.subheader("⚙️ สำหรับแอดมิน")
+    if st.text_input("รหัสผ่านแอดมิน", type="password") == "1234":
+        st.success("เข้าสู่ระบบแอดมินสำเร็จ")
